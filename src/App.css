@@ -1,0 +1,1007 @@
+.room {
+  --wall-green: #6f765f;
+  --wall-green-dark: #555d4c;
+  --deep-green: #343e35;
+  --walnut-dark: #42291f;
+  --walnut: #63402e;
+  --walnut-light: #825c40;
+  --cream: #d8c8a5;
+  --brass: #a68a58;
+  --warm-shadow: rgb(41 27 20 / 38%);
+  --mounted-shadow: 0.58rem 0.72rem 0.72rem rgb(20 15 12 / 44%);
+  --ink: #2b211d;
+  --paper: #f6edda;
+  position: relative;
+  width: 100%;
+  min-height: 100svh;
+  overflow-x: hidden;
+  overflow-y: clip;
+  isolation: isolate;
+  background-color: var(--wall-green);
+}
+
+.room::before,
+.room::after {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  content: '';
+  pointer-events: none;
+}
+
+.room::before {
+  background: radial-gradient(ellipse at center, transparent 72%, rgb(34 43 35 / 8%) 100%);
+}
+
+.room::after {
+  opacity: 0.05;
+  background-image:
+    repeating-linear-gradient(0deg, rgb(255 248 226 / 7%) 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(90deg, rgb(48 37 28 / 5%) 0 1px, transparent 1px 5px);
+  mix-blend-mode: soft-light;
+}
+
+.roomBackdrop {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  pointer-events: none;
+}
+
+.posterWall {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  --left-column: clamp(18rem, 25vw, 32rem);
+  --name-poster-top: clamp(5.25rem, 9vh, 6.25rem);
+  --name-poster-width: clamp(18rem, max(21vw, 21svh), 23.5rem);
+  --name-poster-height: clamp(26.2rem, max(30.55vw, 30.55svh), 34.2rem);
+  --contact-vinyls-width: min(
+    28rem,
+    25svh,
+    max(7rem, calc(74.5svh - var(--name-poster-top) - var(--name-poster-height) - 1rem))
+  );
+  --poster-frame-width: clamp(0.28rem, 0.38vw, 0.38rem);
+  transform: translateX(2rem);
+  pointer-events: none;
+}
+
+.framedPoster {
+  position: relative;
+  padding: var(--poster-frame-width);
+  background:
+    linear-gradient(135deg, rgb(255 229 186 / 32%), transparent 28%, rgb(61 37 27 / 22%) 100%),
+    repeating-linear-gradient(
+      8deg,
+      #9a704e 0 0.24rem,
+      #865e42 0.24rem 0.5rem,
+      #906748 0.5rem 0.78rem
+    );
+  border: 1px solid #43291e;
+  box-shadow:
+    inset 1px 1px 0 rgb(255 225 178 / 38%),
+    inset -2px -2px 0 rgb(54 31 22 / 34%),
+    0.52rem 0.68rem 0.82rem rgb(20 15 12 / 42%);
+  isolation: isolate;
+}
+
+.framedPoster::before,
+.framedPoster::after {
+  position: absolute;
+  content: '';
+  pointer-events: none;
+}
+
+.framedPoster::before {
+  z-index: 2;
+  inset: var(--poster-frame-width);
+  border: 1px solid rgb(58 35 25 / 72%);
+  box-shadow:
+    inset 0.12rem 0.14rem 0.2rem rgb(41 27 20 / 30%),
+    0 0 0 1px rgb(226 185 134 / 17%);
+}
+
+.framedPoster::after {
+  z-index: 3;
+  inset: 0;
+  border-top: 1px solid rgb(255 229 188 / 33%);
+  border-right: 1px solid rgb(54 31 22 / 34%);
+  border-bottom: 1px solid rgb(48 28 20 / 48%);
+  border-left: 1px solid rgb(239 198 148 / 19%);
+}
+
+.poster {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  rotate: 0deg;
+  filter: saturate(0.97) contrast(1.02);
+  box-shadow: 0.08rem 0.1rem 0.16rem rgb(41 27 20 / 22%);
+}
+
+.namePosterDisplay {
+  position: absolute;
+  top: var(--name-poster-top);
+  left: var(--left-column);
+  width: var(--name-poster-width);
+}
+
+.namePosterFrame {
+  width: 100%;
+}
+
+.posterLight {
+  position: absolute;
+  z-index: 4;
+  bottom: calc(100% + 1rem);
+  left: 18%;
+  width: 64%;
+  aspect-ratio: 3.15;
+  overflow: hidden;
+  filter: drop-shadow(0.2rem 0.32rem 0.28rem rgb(20 15 12 / 38%));
+  pointer-events: none;
+}
+
+.posterLight img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  width: 100%;
+  height: auto;
+  transform: translate(-50%, -50%);
+}
+
+.guitarMount {
+  position: absolute;
+  z-index: 4;
+  top: clamp(3rem, 7vh, 5rem);
+  left: clamp(5rem, 7vw, 8rem);
+  width: clamp(14rem, 14vw, 17rem);
+  pointer-events: none;
+}
+
+.guitarImage {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  filter: drop-shadow(var(--mounted-shadow));
+  transform: none;
+}
+
+.contactVinyls {
+  position: absolute;
+  z-index: 4;
+  bottom: 25.5svh;
+  left: calc(var(--left-column) + (var(--name-poster-width) - var(--contact-vinyls-width)) / 2);
+  display: grid;
+  width: var(--contact-vinyls-width);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.65rem, 0.75vw, 0.9rem);
+  transform: translateX(2.25rem);
+}
+
+.contactVinyl {
+  --contact-column-offset: 0%;
+  --contact-row-offset: 0rem;
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  outline: none;
+  pointer-events: auto;
+  transform: translate(var(--contact-column-offset), var(--contact-row-offset));
+  transition: filter 180ms ease, transform 180ms ease;
+}
+
+.contactVinyl:nth-child(n + 3) {
+  --contact-column-offset: -14%;
+}
+
+.contactVinylImage {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0.24rem 0.34rem 0.3rem rgb(20 15 12 / 38%));
+}
+
+.contactVinylLogo {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  display: block;
+  width: 17%;
+  height: 17%;
+  object-fit: contain;
+  filter: sepia(0.2) saturate(0.75) contrast(1.15);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.wallPlant,
+.potPlant {
+  position: absolute;
+  pointer-events: none;
+}
+
+.wallPlant {
+  z-index: 2;
+  top: 0;
+  left: -4rem;
+  width: clamp(12rem, 15vw, 19rem);
+  height: auto;
+  filter: drop-shadow(0.32rem 0.4rem 0.34rem rgb(20 15 12 / 30%));
+}
+
+.potPlant {
+  z-index: 2;
+  bottom: 17svh;
+  left: -1.5rem;
+  width: clamp(12rem, 15vw, 19rem);
+  height: auto;
+  filter: drop-shadow(0.35rem 0.45rem 0.42rem rgb(20 15 12 / 34%));
+}
+
+.contactVinyl:hover,
+.contactVinyl:focus-visible {
+  filter: brightness(1.06);
+  transform:
+    translate(var(--contact-column-offset), calc(var(--contact-row-offset) - 0.12rem))
+    scale(1.04);
+}
+
+.windowImage {
+  position: absolute;
+  z-index: 3;
+  top: clamp(5.5rem, 14vh, 9rem);
+  right: clamp(5rem, 7vw, 9rem);
+  width: clamp(24rem, 24vw, 30rem);
+  height: auto;
+  filter: drop-shadow(0.65rem 0.82rem 0.82rem rgb(20 15 12 / 44%));
+  pointer-events: none;
+}
+
+.rackArea {
+  position: absolute;
+  z-index: 3;
+  top: clamp(3.5rem, 7vh, 5rem);
+  left: 59.5%;
+  width: clamp(42rem, 61vw, 66rem);
+  aspect-ratio: 1 / 0.68;
+  transform: translateX(-50%);
+}
+
+.tableImage {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.rackImage {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: auto;
+  filter:
+    sepia(0.17)
+    saturate(0.73)
+    brightness(0.77)
+    contrast(1.06)
+    drop-shadow(var(--mounted-shadow));
+  pointer-events: none;
+}
+
+.topRackImage {
+  top: -14%;
+  left: 12.5%;
+  width: 75%;
+}
+
+.bottomRackImage {
+  top: 18.5%;
+  left: 12.5%;
+  width: 75%;
+}
+
+.rackLip {
+  z-index: 5;
+  clip-path: inset(54% 0 0);
+  filter: sepia(0.17) saturate(0.73) brightness(0.77) contrast(1.06);
+}
+
+.vinylCover {
+  --album-perspective: 620px;
+  --album-rotate-x: 4deg;
+  position: absolute;
+  z-index: 2;
+  width: 16%;
+  aspect-ratio: 1;
+  padding: 0;
+  overflow: visible;
+  cursor: pointer;
+  border: 0;
+  background: transparent;
+  box-shadow:
+    0 0.42rem 0.62rem rgb(20 15 12 / 42%),
+    0 0.16rem 0.12rem rgb(20 15 12 / 34%);
+  filter: saturate(0.88) sepia(0.04) contrast(0.97);
+  backface-visibility: hidden;
+  transform:
+    perspective(var(--album-perspective))
+    rotateX(var(--album-rotate-x));
+  transform-origin: bottom center;
+  transition:
+    transform 220ms ease,
+    filter 220ms ease,
+    box-shadow 220ms ease;
+}
+
+.vinylCover img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.vinylCover::after {
+  position: absolute;
+  inset: 0;
+  opacity: 0.12;
+  background: repeating-linear-gradient(0deg, transparent 0 3px, rgb(68 48 32 / 18%) 3px 4px);
+  content: '';
+  pointer-events: none;
+}
+
+.vinylCover:hover,
+.vinylCover:focus-visible {
+  z-index: 4;
+  filter: saturate(0.94) sepia(0.03) contrast(1);
+  transform:
+    translateY(-0.15rem)
+    perspective(var(--album-perspective))
+    rotateX(var(--album-rotate-x))
+    scale(1.014);
+  box-shadow: 0 0.7rem 0.9rem rgb(41 27 20 / 42%);
+}
+
+.vinylCover:focus-visible,
+.closeButton:focus-visible {
+  outline: 0.22rem solid #9f2f24;
+  outline-offset: 0.25rem;
+}
+
+.vinylCover:disabled {
+  cursor: default;
+}
+
+.vinylCover.isSelected {
+  filter: saturate(0.55) brightness(0.78);
+  transform:
+    translateY(-0.3rem)
+    perspective(var(--album-perspective))
+    rotateX(var(--album-rotate-x));
+}
+
+.vinylTitle {
+  position: absolute;
+  z-index: 6;
+  bottom: calc(100% + 0.5rem);
+  left: 50%;
+  width: max-content;
+  max-width: 10rem;
+  padding: 0.28rem 0.5rem;
+  color: #fffaf1;
+  font-size: clamp(0.65rem, 1vw, 0.82rem);
+  line-height: 1.1;
+  text-align: center;
+  opacity: 0;
+  background: rgb(43 33 29 / 88%);
+  border-radius: 0.2rem;
+  transform: translate(-50%, 0.25rem);
+  transition: opacity 180ms ease, transform 180ms ease;
+  pointer-events: none;
+}
+
+.vinylCover:hover .vinylTitle,
+.vinylCover:focus-visible .vinylTitle {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.upper {
+  top: -4%;
+}
+
+.upper.cover1 {
+  left: 17.5%;
+  --album-rotate-x: 5.5deg;
+}
+
+.upper.cover2 {
+  left: 40.7%;
+  --album-rotate-x: 4.2deg;
+}
+
+.upper.cover3 {
+  left: 64.2%;
+  --album-rotate-x: 6.2deg;
+}
+
+.lower {
+  top: 28.5%;
+}
+
+.lower.cover1 {
+  left: 29.5%;
+  --album-rotate-x: 5deg;
+}
+
+.lower.cover2 {
+  left: 52.4%;
+  --album-rotate-x: 4.5deg;
+}
+
+.playerArea {
+  position: absolute;
+  z-index: 4;
+  bottom: 0;
+  left: 59.5%;
+  width: min(40vw, 60svh, 46rem);
+  transform: translateX(-50%);
+  filter: drop-shadow(0.72rem 0.88rem 0.82rem rgb(20 15 12 / 42%));
+  pointer-events: none;
+}
+
+.playerArea::after {
+  position: absolute;
+  z-index: 0;
+  right: 8%;
+  bottom: 6%;
+  left: 8%;
+  height: 6%;
+  background: rgb(20 15 12 / 42%);
+  border-radius: 50%;
+  filter: blur(0.9rem);
+  content: '';
+  pointer-events: none;
+}
+
+.tableImage {
+  position: relative;
+  z-index: 1;
+  filter: sepia(0.17) saturate(0.73) brightness(0.77) contrast(1.06);
+}
+
+.playerTarget {
+  position: absolute;
+  z-index: 3;
+  top: 39%;
+  left: 44.6%;
+  width: 24%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.animatedRecord,
+.playerRecord {
+  position: fixed;
+  z-index: 20;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: repeating-radial-gradient(
+    circle,
+    #171717 0,
+    #171717 2px,
+    #292929 3px,
+    #101010 5px
+  );
+  box-shadow:
+    0 0.85rem 1.85rem rgb(0 0 0 / 38%),
+    inset 0 0 0 0.12rem rgb(255 255 255 / 6%);
+  pointer-events: none;
+}
+
+.animatedRecord {
+  left: var(--start-x);
+  top: var(--start-y);
+  width: var(--start-size);
+}
+
+.recordGrooves {
+  position: absolute;
+  inset: 7%;
+  border: 1px solid rgb(255 255 255 / 11%);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 0.34rem rgb(255 255 255 / 4%),
+    0 0 0 0.66rem rgb(0 0 0 / 20%),
+    0 0 0 1rem rgb(255 255 255 / 4%);
+}
+
+.recordLabel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 36%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 0.12rem solid #e1ceb0;
+  border-radius: 50%;
+  background: #c78555;
+  transform: translate(-50%, -50%);
+}
+
+.recordLabel img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.82;
+}
+
+.recordHole {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #191919;
+  box-shadow: 0 0 0 1px rgb(237 220 189 / 80%);
+  transform: translate(-50%, -50%);
+}
+
+.animatedRecord.lifting {
+  animation: recordLift 290ms cubic-bezier(0.22, 0.8, 0.36, 1) forwards;
+}
+
+.animatedRecord.flying {
+  animation: flyToPlayer 880ms cubic-bezier(0.3, 0.82, 0.38, 1) forwards;
+}
+
+.animatedRecord.returning {
+  animation: returnToSleeve 700ms cubic-bezier(0.45, 0, 0.55, 1) forwards;
+}
+
+.playerRecord {
+  animation: recordSpin 2.2s linear infinite;
+}
+
+.portfolioOverlay {
+  position: absolute;
+  z-index: 10;
+  top: clamp(5rem, 16vh, 10rem);
+  left: clamp(33%, 42vw, 45%);
+  width: clamp(19rem, 35vw, 33rem);
+  padding: clamp(1.45rem, 3vw, 2.5rem);
+  color: var(--ink);
+  background-color: rgb(249 239 219 / 96%);
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 0.25rem,
+    rgb(103 70 44 / 3%) 0.3rem
+  );
+  border: 1px solid rgb(94 57 34 / 62%);
+  border-radius: 0.45rem;
+  box-shadow: 0.45rem 0.75rem 1.5rem rgb(49 31 21 / 25%);
+  animation: overlayEnter 380ms ease forwards;
+}
+
+.portfolioOverlay.isClosing {
+  pointer-events: none;
+  animation: overlayExit 240ms ease forwards;
+}
+
+.portfolioOverlay h1 {
+  max-width: 85%;
+  margin: 0 0 0.9rem;
+  color: #47291f;
+  font-size: clamp(1.8rem, 3.3vw, 3rem);
+  line-height: 0.95;
+}
+
+.portfolioOverlay p {
+  margin: 0;
+  font-size: clamp(1rem, 1.4vw, 1.16rem);
+  line-height: 1.55;
+}
+
+.portfolioOverlay .comingSoon {
+  margin-top: 1.4rem;
+  color: #7e3429;
+  font-style: italic;
+}
+
+.overlayEyebrow {
+  margin-bottom: 0.65rem !important;
+  color: #9c5f36;
+  font-size: 0.78rem !important;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.closeButton {
+  position: absolute;
+  top: 0.65rem;
+  right: 0.65rem;
+  display: grid;
+  width: 2rem;
+  aspect-ratio: 1;
+  padding: 0;
+  color: #fdf5e7;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  background: #6d3728;
+  border-radius: 50%;
+  transition: background-color 160ms ease, transform 160ms ease;
+}
+
+.closeButton:hover:not(:disabled) {
+  background: #9d422f;
+  transform: rotate(8deg) scale(1.05);
+}
+
+.closeButton:disabled {
+  cursor: default;
+}
+
+@keyframes recordLift {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -25%) scale(0.75) rotate(-10deg);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, -72%) scale(1) rotate(38deg);
+  }
+}
+
+@keyframes flyToPlayer {
+  0% {
+    left: var(--start-x);
+    top: var(--start-y);
+    width: var(--start-size);
+    opacity: 1;
+    transform: translate(-50%, -72%) rotate(38deg);
+  }
+
+  48% {
+    left: var(--mid-x);
+    top: var(--mid-y);
+    width: var(--mid-size);
+    transform: translate(-50%, -50%) rotate(350deg);
+  }
+
+  100% {
+    left: var(--end-x);
+    top: var(--end-y);
+    width: var(--end-size);
+    opacity: 1;
+    transform: translate(-50%, -50%) scaleY(0.31) rotate(720deg);
+  }
+}
+
+@keyframes returnToSleeve {
+  0% {
+    left: var(--end-x);
+    top: var(--end-y);
+    width: var(--end-size);
+    opacity: 1;
+    transform: translate(-50%, -50%) scaleY(0.31) rotate(720deg);
+  }
+
+  55% {
+    left: var(--mid-x);
+    top: var(--mid-y);
+    width: var(--mid-size);
+    transform: translate(-50%, -50%) rotate(370deg);
+  }
+
+  100% {
+    left: var(--start-x);
+    top: var(--start-y);
+    width: var(--start-size);
+    opacity: 0;
+    transform: translate(-50%, -28%) scale(0.75) rotate(0deg);
+  }
+}
+
+@keyframes recordSpin {
+  from {
+    transform: translate(-50%, -50%) scaleY(0.31) rotate(0deg);
+  }
+
+  to {
+    transform: translate(-50%, -50%) scaleY(0.31) rotate(360deg);
+  }
+}
+
+@keyframes overlayEnter {
+  from {
+    opacity: 0;
+    transform: translateY(1.25rem) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes overlayExit {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(0.7rem) scale(0.98);
+  }
+}
+
+@media (min-width: 1400px) {
+  .rackArea {
+    top: clamp(6rem, 13vh, 8rem);
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1399px) {
+  .posterWall {
+    inset: 0;
+    --left-column: clamp(11rem, 22vw, 18rem);
+    --name-poster-top: clamp(3.5rem, 7svh, 4.5rem);
+    --name-poster-width: clamp(14rem, 19vw, 17rem);
+    --name-poster-height: clamp(20.4rem, 27.63vw, 24.75rem);
+  }
+
+  .rackArea {
+    top: clamp(3rem, 6vh, 4rem);
+    left: 60%;
+    width: min(62vw, 54rem);
+  }
+
+  .guitarMount {
+    top: 3rem;
+    left: clamp(2rem, 4vw, 3.5rem);
+    width: 10rem;
+  }
+
+  .windowImage {
+    right: clamp(3rem, 4vw, 4rem);
+    width: clamp(14rem, 24vw, 18rem);
+  }
+
+  .playerArea {
+    bottom: 0;
+    left: 60%;
+    width: min(48vw, 60svh, 40rem);
+  }
+
+  .portfolioOverlay {
+    left: 31%;
+    width: min(49vw, 28rem);
+  }
+}
+
+@media (max-width: 900px) {
+  .posterWall {
+    inset: 0;
+    --left-column: clamp(5.25rem, 13vw, 7rem);
+    --name-poster-top: clamp(2.5rem, 5svh, 3.5rem);
+    --name-poster-width: clamp(7rem, 16vw, 9rem);
+    --contact-vinyls-width: clamp(5.5rem, 15vw, 8rem);
+    transform: translateX(0.75rem);
+  }
+
+  .contactVinyls {
+    bottom: 25.5svh;
+    transform: none;
+  }
+
+  .windowImage {
+    top: clamp(4rem, 10svh, 6rem);
+    right: 1rem;
+    width: clamp(15rem, 30vw, 20rem);
+  }
+
+  .rackArea {
+    top: clamp(14rem, 32svh, 17rem);
+    left: 68%;
+    width: min(70vw, 40rem);
+  }
+
+  .playerArea {
+    bottom: 0;
+    left: 68%;
+    width: min(62vw, 58svh, 34rem);
+  }
+
+  .guitarMount {
+    top: 2rem;
+    left: 0.25rem;
+    width: 7rem;
+  }
+
+  .wallPlant {
+    left: -1.25rem;
+    width: 10rem;
+  }
+
+  .potPlant {
+    left: -1rem;
+    width: 8rem;
+  }
+
+  .portfolioOverlay {
+    left: 28%;
+    width: min(58vw, 28rem);
+  }
+}
+
+@media (max-width: 600px) {
+  .posterWall {
+    inset: 0;
+    --left-column: 4rem;
+    --name-poster-top: 1.75rem;
+    --name-poster-width: min(18vw, 6.5rem);
+    --contact-vinyls-width: min(20vw, 7rem);
+    --poster-frame-width: 0.2rem;
+    transform: translateX(0.5rem);
+  }
+
+  .windowImage {
+    top: clamp(6.5rem, 13svh, 7.5rem);
+    right: 0.5rem;
+    width: 8rem;
+  }
+
+  .rackArea {
+    top: clamp(9.5rem, 19svh, 10.5rem);
+    left: 70%;
+    width: min(78vw, 32rem);
+  }
+
+  .playerArea {
+    bottom: 0;
+    left: 70%;
+    width: min(76vw, 56svh, 27rem);
+  }
+
+  .guitarMount {
+    top: 1.5rem;
+    left: 0.25rem;
+    width: 5rem;
+  }
+
+  .wallPlant {
+    left: -0.75rem;
+    width: 6rem;
+  }
+
+  .potPlant {
+    left: -0.5rem;
+    width: 5rem;
+  }
+
+  .portfolioOverlay {
+    position: fixed;
+    z-index: 40;
+    top: auto;
+    bottom: 1rem;
+    left: 50%;
+    width: min(calc(100% - 2rem), 34rem);
+    max-height: min(46vh, 24rem);
+    overflow-y: auto;
+    transform: translateX(-50%);
+  }
+
+  .portfolioOverlay.isClosing {
+    animation-name: overlayExitMobile;
+  }
+
+  @keyframes overlayExitMobile {
+    from {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0) scale(1);
+    }
+
+    to {
+      opacity: 0;
+      transform: translateX(-50%) translateY(0.7rem) scale(0.98);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+  }
+
+  .vinylCover,
+  .closeButton {
+    transition-duration: 1ms;
+  }
+
+  .animatedRecord.lifting {
+    animation: reducedLift 90ms ease forwards;
+  }
+
+  .animatedRecord.flying {
+    animation: reducedFlight 160ms ease forwards;
+  }
+
+  .animatedRecord.returning {
+    animation: reducedReturn 150ms ease forwards;
+  }
+
+  .playerRecord {
+    animation-duration: 12s;
+  }
+
+  @keyframes reducedLift {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.85);
+    }
+
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+
+  @keyframes reducedFlight {
+    from {
+      left: var(--start-x);
+      top: var(--start-y);
+      width: var(--start-size);
+      opacity: 0.5;
+      transform: translate(-50%, -50%);
+    }
+
+    to {
+      left: var(--end-x);
+      top: var(--end-y);
+      width: var(--end-size);
+      opacity: 1;
+      transform: translate(-50%, -50%) scaleY(0.31);
+    }
+  }
+
+  @keyframes reducedReturn {
+    from {
+      left: var(--end-x);
+      top: var(--end-y);
+      width: var(--end-size);
+      opacity: 1;
+      transform: translate(-50%, -50%) scaleY(0.31);
+    }
+
+    to {
+      left: var(--start-x);
+      top: var(--start-y);
+      width: var(--start-size);
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.85);
+    }
+  }
+}
