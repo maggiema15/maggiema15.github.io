@@ -1,0 +1,185 @@
+/*
+ * The artwork is authored at 1672x941 (the supplied 16:9 reference). Every
+ * room object lives inside this coordinate system. The canvas scales as one
+ * unit, so a 16:10 viewport adds letterbox space instead of changing object
+ * relationships.
+ */
+
+.room {
+  --scene-render-width: min(100vw, calc(100svh * 1672 / 941));
+  --scene-render-height: calc(var(--scene-render-width) * 941 / 1672);
+  --scene-horizontal-gap: max(0px, calc(100vw - var(--scene-render-width)));
+  --scene-vertical-gap: max(0px, calc(100svh - var(--scene-render-height)));
+  --scene-left-gap: calc(var(--scene-horizontal-gap) / 2);
+  --scene-top-gap: calc(var(--scene-vertical-gap) / 2);
+  /* The backdrop's floor begins about 76% down its canvas. */
+  --floor-anchor-shift: calc(var(--scene-vertical-gap) * 0.26);
+  position: relative;
+  width: 100%;
+  min-height: 100svh;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.roomAmbientFill {
+  position: absolute;
+  z-index: var(--layer-backdrop);
+  inset: 0;
+  background-image: url('../assests/wall & borderline.png');
+  background-position: center;
+  background-size: 100% 100%;
+  pointer-events: none;
+}
+
+.sceneCanvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--scene-render-width);
+  aspect-ratio: 1672 / 941;
+  container-type: inline-size;
+  transform: translate(-50%, -50%);
+}
+
+.posterWall {
+  --poster-frame-width: 0.48cqw;
+  position: absolute;
+  z-index: var(--layer-foreground);
+  inset: 0;
+  pointer-events: none;
+}
+
+.namePosterDisplay {
+  position: absolute;
+  top: calc(100% * 72 / 941);
+  left: calc(100% * 376 / 1672);
+  width: calc(100% * 264 / 1672);
+}
+
+.guitarMount {
+  position: absolute;
+  z-index: var(--layer-foreground);
+  top: calc(100% * 94 / 941);
+  left: calc(100% * 128 / 1672);
+  width: calc(100% * 156 / 1672);
+  pointer-events: none;
+}
+
+.contactVinyls {
+  position: absolute;
+  z-index: 4;
+  top: calc(100% * 456 / 941);
+  left: calc(100% * 376 / 1672);
+  width: calc(100% * 238 / 1672);
+  height: calc(100% * 220 / 941);
+  pointer-events: auto;
+}
+
+.wallPlant {
+  z-index: var(--layer-plants);
+  top: 0;
+  left: calc(100% * -70 / 1672);
+  width: calc(100% * 250 / 1672);
+  height: auto;
+  transform: translate(
+    calc(-1 * var(--scene-left-gap)),
+    calc(-1 * var(--scene-top-gap))
+  );
+}
+
+.potPlant {
+  z-index: var(--layer-plants);
+  top: calc(100% * 454 / 941);
+  left: calc(100% * -30 / 1672);
+  width: calc(100% * 225 / 1672);
+  height: auto;
+  transform: translateY(var(--floor-anchor-shift));
+}
+
+.windowImage {
+  position: absolute;
+  z-index: var(--layer-wall-objects);
+  top: calc(100% * 52 / 941);
+  left: calc(100% * 1252 / 1672);
+  width: calc(100% * 344 / 1672);
+  height: auto;
+}
+
+.rackArea {
+  position: absolute;
+  z-index: var(--layer-wall-objects);
+  top: 0;
+  left: calc(100% * 663 / 1672);
+  width: calc(100% * 522 / 1672);
+  height: 100%;
+}
+
+.albumShelf {
+  /* Zero-height baseline: cover bottoms and the shelf lip share this edge. */
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 0;
+  --shelf-seat: 58%;
+}
+
+.upperShelf {
+  top: calc(100% * 201 / 941);
+}
+
+.lowerShelf {
+  top: calc(100% * 375 / 941);
+  --shelf-seat: 56%;
+}
+
+.vinylCover {
+  position: absolute;
+  bottom: 0;
+  width: calc(100% * 134 / 522);
+}
+
+.vinylCover[data-section="about"] {
+  left: calc(100% * 17 / 522);
+  --album-rotate-x: 5.5deg;
+}
+
+.vinylCover[data-section="projects"] {
+  left: calc(100% * 172 / 522);
+  --album-rotate-x: 4.2deg;
+}
+
+.vinylCover[data-section="experience"] {
+  left: calc(100% * 317 / 522);
+  --album-rotate-x: 6.2deg;
+}
+
+.vinylCover[data-section="skills"] {
+  left: calc(100% * 38 / 522);
+  --album-rotate-x: 5deg;
+}
+
+.vinylCover[data-section="albums"] {
+  left: calc(100% * 196 / 522);
+  --album-rotate-x: 4.5deg;
+}
+
+.playerArea {
+  position: absolute;
+  z-index: var(--layer-foreground);
+  /* This cabinet is taller than the reference asset; preserve its ratio. */
+  top: calc(100% * 431 / 941);
+  left: calc(100% * 680 / 1672);
+  width: calc(100% * 480 / 1672);
+  transform: translateY(var(--floor-anchor-shift));
+}
+
+.playerTarget {
+  position: absolute;
+  z-index: 3;
+  /* The tight cabinet crop puts the platter near the upper fifth. */
+  top: 17.2%;
+  left: 43.2%;
+  width: 24%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+}

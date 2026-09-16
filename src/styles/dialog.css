@@ -1,0 +1,168 @@
+/* The position wrapper stays still while the inner panel animates. */
+
+.closeButton:focus-visible {
+  outline: 0.22rem solid #9f2f24;
+  outline-offset: 0.25rem;
+}
+
+.portfolioOverlayPosition {
+  position: fixed;
+  z-index: var(--layer-dialog);
+  left: clamp(33%, 42vw, 45%);
+  width: clamp(19rem, 35vw, 33rem);
+  --dialog-top: clamp(5rem, 16vh, 10rem);
+  top: var(--dialog-top);
+}
+
+.portfolioOverlay {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: calc(100svh - var(--dialog-top) - 1rem);
+  overflow: hidden;
+  padding: clamp(1.45rem, 3vw, 2.5rem);
+  color: var(--ink);
+  background-color: rgb(249 239 219 / 96%);
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 0.25rem,
+    rgb(103 70 44 / 3%) 0.3rem
+  );
+  border: 1px solid rgb(94 57 34 / 62%);
+  border-radius: 0.45rem;
+  box-shadow: 0.45rem 0.75rem 1.5rem rgb(49 31 21 / 25%);
+  animation: overlayEnter 380ms ease forwards;
+}
+
+.portfolioContent {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.portfolioOverlay.isClosing {
+  pointer-events: none;
+  animation: overlayExit 240ms ease forwards;
+}
+
+.portfolioOverlay h1 {
+  max-width: 85%;
+  margin: 0 0 0.9rem;
+  color: #47291f;
+  font-size: clamp(1.8rem, 3.3vw, 3rem);
+  line-height: 0.95;
+}
+
+.portfolioOverlay p {
+  margin: 0;
+  font-size: clamp(1rem, 1.4vw, 1.16rem);
+  line-height: 1.55;
+}
+
+.portfolioOverlay .comingSoon {
+  margin-top: 1.4rem;
+  color: #7e3429;
+  font-style: italic;
+}
+
+.portfolioOverlay .overlayEyebrow {
+  margin-bottom: 0.65rem;
+  color: #9c5f36;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.closeButton {
+  position: absolute;
+  z-index: 1;
+  top: 0.65rem;
+  right: 0.65rem;
+  display: grid;
+  width: 2rem;
+  aspect-ratio: 1;
+  padding: 0;
+  color: #fdf5e7;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  background: #6d3728;
+  border-radius: 50%;
+  transition: background-color 160ms ease, transform 160ms ease;
+  place-items: center;
+}
+
+.closeButton:hover:not(:disabled) {
+  background: #9d422f;
+  transform: rotate(8deg) scale(1.05);
+}
+
+.closeButton:disabled {
+  cursor: default;
+}
+
+@keyframes overlayEnter {
+  from {
+    opacity: 0;
+    transform: translateY(1.25rem) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes overlayExit {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(0.7rem) scale(0.98);
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1399px) {
+  .portfolioOverlayPosition {
+    left: 31%;
+    width: min(49vw, 28rem);
+  }
+}
+
+@media (max-width: 900px) {
+  .portfolioOverlayPosition {
+    left: 28%;
+    width: min(58vw, 28rem);
+  }
+}
+
+@media (max-width: 600px) {
+  .portfolioOverlayPosition {
+    z-index: var(--layer-mobile-dialog);
+    --dialog-top: auto;
+    bottom: 1rem;
+    left: 50%;
+    width: min(calc(100% - 2rem), 34rem);
+    transform: translateX(-50%);
+  }
+
+  .portfolioOverlay {
+    max-height: min(46svh, 24rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portfolioOverlay {
+    animation: none;
+  }
+
+  .closeButton {
+    transition: none;
+  }
+}
