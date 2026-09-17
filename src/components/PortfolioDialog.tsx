@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef } from 'react'
 import type { PortfolioSection } from '../data/portfolio'
+import { PortfolioBooklet } from './PortfolioBooklet'
 
 type Props = {
   section: PortfolioSection
@@ -67,7 +68,7 @@ export function PortfolioDialog({ section, closing, onClose, onComplete }: Props
   }, [onClose])
 
   return (
-    <div className="portfolioOverlayPosition">
+    <div className={`portfolioOverlayPosition${closing ? ' isClosing' : ''}`}>
       <section
         ref={dialogRef}
         className={`portfolioOverlay${closing ? ' isClosing' : ''}`}
@@ -79,21 +80,22 @@ export function PortfolioDialog({ section, closing, onClose, onComplete }: Props
           if (event.target === event.currentTarget) onComplete(event.animationName)
         }}
       >
-        <button
-          ref={closeRef}
-          type="button"
-          className="closeButton"
-          aria-label="Close portfolio section"
-          disabled={closing}
-          onClick={onClose}
-        >
-          ×
-        </button>
+        <div className="bookletBar">
+          <span className="bookletBarLabel">Maggie Ma · The collection</span>
+          <button
+            ref={closeRef}
+            type="button"
+            className="closeButton"
+            aria-label="Close portfolio section"
+            disabled={closing}
+            onClick={onClose}
+          >
+            <span className="closeLabel">Back to the room</span>
+            <span className="closeIcon" aria-hidden="true">×</span>
+          </button>
+        </div>
         <div className="portfolioContent">
-          <p className="overlayEyebrow">Now playing</p>
-          <h1 id={titleId}>{section.title}</h1>
-          <p>{section.description}</p>
-          <p className="comingSoon">Content coming soon.</p>
+          <PortfolioBooklet section={section} titleId={titleId} />
         </div>
       </section>
     </div>

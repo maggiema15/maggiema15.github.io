@@ -7,9 +7,8 @@
   --layer-plants: 2;
   --layer-wall-objects: 3;
   --layer-foreground: 4;
-  --layer-dialog: 10;
+  --layer-dialog: 30;
   --layer-record: 20;
-  --layer-mobile-dialog: 40;
   --wall-green: #6f765f;
   --mounted-shadow: 0.58rem 0.72rem 0.72rem rgb(20 15 12 / 44%);
   --ink: #2b211d;
@@ -133,15 +132,6 @@
   filter: drop-shadow(var(--mounted-shadow));
 }
 
-.contactVinyls {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-template-rows: repeat(2, minmax(0, 1fr));
-  column-gap: 6%;
-  row-gap: 2%;
-  align-items: center;
-}
-
 .contactVinyl {
   --contact-column-offset: 0%;
   --contact-row-offset: 0rem;
@@ -149,7 +139,10 @@
   display: block;
   width: 100%;
   aspect-ratio: 1;
+  padding: 0;
   outline: none;
+  border: 0;
+  background: transparent;
   pointer-events: auto;
   transform: translate(var(--contact-column-offset), var(--contact-row-offset));
   transition: filter 180ms ease, transform 180ms ease;
@@ -191,8 +184,8 @@
   filter: drop-shadow(0.35rem 0.45rem 0.42rem rgb(20 15 12 / 34%));
 }
 
-a.contactVinyl:hover,
-a.contactVinyl:focus-visible {
+.contactVinyl:hover,
+.contactVinyl:focus-visible {
   filter: brightness(1.06);
   transform:
     translate(var(--contact-column-offset), calc(var(--contact-row-offset) - 0.12rem))
@@ -230,8 +223,10 @@ a.contactVinyl:focus-visible {
 
 .vinylCover {
   --album-perspective: 37.08cqw;
-  --album-rotate-x: 4deg;
+  position: relative;
   z-index: 2;
+  display: block;
+  width: 100%;
   aspect-ratio: 1;
   padding: 0;
   overflow: visible;
@@ -282,7 +277,7 @@ a.contactVinyl:focus-visible {
 }
 
 .vinylCover:focus-visible,
-a.contactVinyl:focus-visible {
+.contactVinyl:focus-visible {
   outline: 0.22rem solid #9f2f24;
   outline-offset: 0.25rem;
 }
@@ -319,8 +314,8 @@ a.contactVinyl:focus-visible {
   pointer-events: none;
 }
 
-.vinylCover:hover .vinylTitle,
-.vinylCover:focus-visible .vinylTitle {
+.vinylSlot:hover .vinylTitle,
+.vinylSlot:has(.vinylCover:focus-visible) .vinylTitle {
   opacity: 1;
   transform: translate(-50%, 0);
 }
@@ -358,15 +353,26 @@ a.contactVinyl:focus-visible {
   pointer-events: none;
 }
 
-/* Unavailable contacts are deliberately distinct from working links. */
-.contactVinyl[aria-disabled="true"] {
-  cursor: default;
-  filter: grayscale(0.65);
+.motionControl {
+  position: fixed;
+  z-index: var(--layer-foreground);
+  right: 1rem;
+  bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 2.75rem;
+  padding: 0.65rem 0.9rem;
+  color: #3b3026;
+  background: #eee3ca;
+  border: 1px solid #a99573;
+  border-radius: 2px;
+  box-shadow: 2px 3px 8px rgb(20 15 12 / 22%);
+  font-size: 0.8rem;
+  cursor: pointer;
 }
-
-@media (prefers-reduced-motion: reduce) {
-  .vinylCover,
-  .contactVinyl {
-    transition: none;
-  }
-}
+.motionControl:focus-visible { outline: 3px solid #9f2f24; outline-offset: 3px; }
+.motionIndicator { width: 0.45rem; height: 0.45rem; border: 1px solid #625642; border-radius: 50%; }
+.motionControl[aria-pressed='true'] .motionIndicator { background: #59613e; border-color: #59613e; }
+.room[data-reduced-motion='true'] .vinylCover,
+.room[data-reduced-motion='true'] .contactVinyl { transition: none; }

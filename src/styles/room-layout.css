@@ -68,11 +68,37 @@
 .contactVinyls {
   position: absolute;
   z-index: 4;
-  top: calc(100% * 456 / 941);
-  left: calc(100% * 376 / 1672);
-  width: calc(100% * 238 / 1672);
-  height: calc(100% * 220 / 941);
+  top: calc(100% * 462 / 941);
+  left: calc(100% * 304 / 1672);
+  width: calc(100% * 318 / 1672);
+  height: calc(100% * 202 / 941);
   pointer-events: auto;
+}
+
+.contactVinyls .contactVinyl {
+  position: absolute;
+  width: calc(100% * 108 / 318);
+}
+
+/* The reference staggers the lower pair to the right of the upper pair. */
+.contactVinyl[data-contact="github"] {
+  top: 0;
+  left: 0;
+}
+
+.contactVinyl[data-contact="email"] {
+  top: calc(100% * 4 / 202);
+  left: calc(100% * 146 / 318);
+}
+
+.contactVinyl[data-contact="linkedin"] {
+  top: calc(100% * 98 / 202);
+  left: calc(100% * 74 / 318);
+}
+
+.contactVinyl[data-contact="resume"] {
+  top: calc(100% * 98 / 202);
+  left: calc(100% * 214 / 318);
 }
 
 .wallPlant {
@@ -109,8 +135,8 @@
   position: absolute;
   z-index: var(--layer-wall-objects);
   top: 0;
-  left: calc(100% * 663 / 1672);
-  width: calc(100% * 522 / 1672);
+  left: calc(100% * 712 / 1672);
+  width: calc(100% * 508 / 1672);
   height: 100%;
 }
 
@@ -124,7 +150,7 @@
 }
 
 .upperShelf {
-  top: calc(100% * 201 / 941);
+  top: calc(100% * 202 / 941);
 }
 
 .lowerShelf {
@@ -132,34 +158,35 @@
   --shelf-seat: 56%;
 }
 
-.vinylCover {
+.vinylSlot {
+  --album-rotate-x: 4deg;
   position: absolute;
   bottom: 0;
-  width: calc(100% * 134 / 522);
+  width: calc(100% * 134 / 508);
 }
 
-.vinylCover[data-section="about"] {
-  left: calc(100% * 17 / 522);
+.vinylSlot[data-album-section="about"] {
+  left: calc(100% * 20 / 508);
   --album-rotate-x: 5.5deg;
 }
 
-.vinylCover[data-section="projects"] {
-  left: calc(100% * 172 / 522);
+.vinylSlot[data-album-section="projects"] {
+  left: calc(100% * 172 / 508);
   --album-rotate-x: 4.2deg;
 }
 
-.vinylCover[data-section="experience"] {
-  left: calc(100% * 317 / 522);
+.vinylSlot[data-album-section="experience"] {
+  left: calc(100% * 324 / 508);
   --album-rotate-x: 6.2deg;
 }
 
-.vinylCover[data-section="skills"] {
-  left: calc(100% * 38 / 522);
+.vinylSlot[data-album-section="skills"] {
+  left: calc(100% * 40 / 508);
   --album-rotate-x: 5deg;
 }
 
-.vinylCover[data-section="albums"] {
-  left: calc(100% * 196 / 522);
+.vinylSlot[data-album-section="albums"] {
+  left: calc(100% * 192 / 508);
   --album-rotate-x: 4.5deg;
 }
 

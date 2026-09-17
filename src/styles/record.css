@@ -1,28 +1,35 @@
-/* Finite animation completion events drive useRecordPlayback; no JS duration copies. */
-
-.animatedRecord,
-.playerRecord {
+/* Travel, perspective, and rotation belong to separate composited layers. */
+.recordTravel {
   position: fixed;
   z-index: var(--layer-record);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: repeating-radial-gradient(
-    circle,
-    #171717 0,
-    #171717 2px,
-    #292929 3px,
-    #101010 5px
-  );
-  box-shadow:
-    0 0.85rem 1.85rem rgb(0 0 0 / 38%),
-    inset 0 0 0 0.12rem rgb(255 255 255 / 6%);
+  top: 0;
+  left: 0;
+  width: 160px;
+  height: 160px;
   pointer-events: none;
 }
 
-.animatedRecord {
-  left: var(--start-x);
-  top: var(--start-y);
-  width: var(--start-size);
+.recordTravel.isMoving { will-change: transform, opacity; }
+
+.recordTilt {
+  width: 100%;
+  height: 100%;
+  transform: scaleY(0.31);
+  border-radius: 50%;
+  box-shadow: 0 7px 12px rgb(0 0 0 / 32%);
+}
+
+.recordSurface {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background:
+    conic-gradient(from 15deg, transparent, rgb(222 212 194 / 14%), transparent 30%, transparent 52%, rgb(222 212 194 / 9%), transparent 80%),
+    repeating-radial-gradient(circle, #171717 0 2px, #292929 3px, #101010 5px);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 14%);
+  /* Never reassign this animation between travel, landing, and return. */
+  animation: recordSpin 3.6s linear infinite;
 }
 
 .recordGrooves {
@@ -30,10 +37,7 @@
   inset: 7%;
   border: 1px solid rgb(255 255 255 / 11%);
   border-radius: 50%;
-  box-shadow:
-    0 0 0 0.34rem rgb(255 255 255 / 4%),
-    0 0 0 0.66rem rgb(0 0 0 / 20%),
-    0 0 0 1rem rgb(255 255 255 / 4%);
+  box-shadow: 0 0 0 5px rgb(255 255 255 / 4%), 0 0 0 10px rgb(0 0 0 / 20%);
 }
 
 .recordLabel {
@@ -43,7 +47,7 @@
   width: 36%;
   aspect-ratio: 1;
   overflow: hidden;
-  border: 0.12rem solid #e1ceb0;
+  border: 2px solid #e1ceb0;
   border-radius: 50%;
   background: #c78555;
   transform: translate(-50%, -50%);
@@ -68,100 +72,9 @@
   transform: translate(-50%, -50%);
 }
 
-.animatedRecord.lifting {
-  animation: recordLift 290ms cubic-bezier(0.22, 0.8, 0.36, 1) forwards;
-}
-
-.animatedRecord.flying {
-  animation: flyToPlayer 880ms cubic-bezier(0.3, 0.82, 0.38, 1) forwards;
-}
-
-.animatedRecord.returning {
-  animation: returnToSleeve 700ms cubic-bezier(0.45, 0, 0.55, 1) forwards;
-}
-
-.playerRecord {
-  left: var(--end-x);
-  top: var(--end-y);
-  width: var(--end-size);
-  transform: translate(-50%, -50%) scaleY(0.31);
-  animation: recordSpin 2.2s linear infinite;
-}
-
-@keyframes recordLift {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -25%) scale(0.75) rotate(-10deg);
-  }
-
-  to {
-    opacity: 1;
-    transform: translate(-50%, -72%) scale(1) rotate(38deg);
-  }
-}
-
-@keyframes flyToPlayer {
-  0% {
-    left: var(--start-x);
-    top: var(--start-y);
-    width: var(--start-size);
-    opacity: 1;
-    transform: translate(-50%, -72%) rotate(38deg);
-  }
-
-  48% {
-    left: var(--mid-x);
-    top: var(--mid-y);
-    width: var(--mid-size);
-    transform: translate(-50%, -50%) rotate(350deg);
-  }
-
-  100% {
-    left: var(--end-x);
-    top: var(--end-y);
-    width: var(--end-size);
-    opacity: 1;
-    transform: translate(-50%, -50%) scaleY(0.31) rotate(720deg);
-  }
-}
-
-@keyframes returnToSleeve {
-  0% {
-    left: var(--end-x);
-    top: var(--end-y);
-    width: var(--end-size);
-    opacity: 1;
-    transform: translate(-50%, -50%) scaleY(0.31) rotate(720deg);
-  }
-
-  55% {
-    left: var(--mid-x);
-    top: var(--mid-y);
-    width: var(--mid-size);
-    transform: translate(-50%, -50%) rotate(370deg);
-  }
-
-  100% {
-    left: var(--start-x);
-    top: var(--start-y);
-    width: var(--start-size);
-    opacity: 0;
-    transform: translate(-50%, -28%) scale(0.75) rotate(0deg);
-  }
-}
-
 @keyframes recordSpin {
-  from {
-    transform: translate(-50%, -50%) scaleY(0.31) rotate(0deg);
-  }
-
-  to {
-    transform: translate(-50%, -50%) scaleY(0.31) rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .playerRecord {
-    animation: none;
-  }
-}
+.room[data-reduced-motion='true'] .recordSurface { animation: none; }
