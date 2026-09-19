@@ -9,7 +9,7 @@
   position: fixed;
   z-index: var(--layer-dialog);
   left: clamp(33%, 42vw, 45%);
-  width: clamp(19rem, 35vw, 33rem);
+  width: min(54vw, 52rem);
   --dialog-top: clamp(5rem, 16vh, 10rem);
   top: var(--dialog-top);
 }
@@ -76,6 +76,60 @@
   text-transform: uppercase;
 }
 
+.portfolioCopy {
+  overflow-wrap: anywhere;
+}
+
+.portfolioCopy > p,
+.portfolioCopy > ul {
+  margin: 1rem 0 0;
+}
+
+.portfolioCopy > p:first-child {
+  margin-top: 0;
+}
+
+.portfolioCopy h2 {
+  margin: 2rem 0 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgb(94 57 34 / 22%);
+  color: #47291f;
+  font-size: 1.4rem;
+  line-height: 1.25;
+}
+
+.portfolioCopy h2:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.portfolioCopy p,
+.portfolioCopy li {
+  font-size: 1.0625rem;
+  line-height: 1.65;
+}
+
+.portfolioCopy .portfolioMeta {
+  color: #7e3429;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.portfolioCopy h2 + .portfolioMeta,
+.portfolioCopy .portfolioMeta + .portfolioMeta {
+  margin-top: 0.4rem;
+}
+
+.portfolioCopy ul {
+  margin-bottom: 0;
+  padding-left: 1.35rem;
+}
+
+.portfolioCopy li + li {
+  margin-top: 0.7rem;
+}
+
 .closeButton {
   position: absolute;
   z-index: 1;
@@ -131,14 +185,14 @@
 @media (min-width: 901px) and (max-width: 1399px) {
   .portfolioOverlayPosition {
     left: 31%;
-    width: min(49vw, 28rem);
+    width: 65vw;
   }
 }
 
 @media (max-width: 900px) {
   .portfolioOverlayPosition {
     left: 28%;
-    width: min(58vw, 28rem);
+    width: 68vw;
   }
 }
 

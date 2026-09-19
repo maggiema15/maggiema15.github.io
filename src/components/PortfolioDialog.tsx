@@ -92,8 +92,25 @@ export function PortfolioDialog({ section, closing, onClose, onComplete }: Props
         <div className="portfolioContent">
           <p className="overlayEyebrow">Now playing</p>
           <h1 id={titleId}>{section.title}</h1>
-          <p>{section.description}</p>
-          <p className="comingSoon">Content coming soon.</p>
+          {typeof section.description === 'string' ? (
+            <p>{section.description}</p>
+          ) : (
+            <div className="portfolioCopy">
+              {section.description.map((block, index) => {
+                switch (block.type) {
+                  case 'heading':
+                    return <h2 key={index}>{block.text}</h2>
+                  case 'meta':
+                    return <p key={index} className="portfolioMeta">{block.text}</p>
+                  case 'list':
+                    return <ul key={index}>{block.items.map((item) => <li key={item}>{item}</li>)}</ul>
+                  case 'paragraph':
+                    return <p key={index}>{block.text}</p>
+                }
+              })}
+            </div>
+          )}
+          {section.id === 'albums' && <p className="comingSoon">Content coming soon.</p>}
         </div>
       </section>
     </div>

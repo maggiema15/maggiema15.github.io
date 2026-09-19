@@ -7,7 +7,7 @@
   --layer-plants: 2;
   --layer-wall-objects: 3;
   --layer-foreground: 4;
-  --layer-dialog: 10;
+  --layer-dialog: 30;
   --layer-record: 20;
   --layer-mobile-dialog: 40;
   --wall-green: #6f765f;
