@@ -46,6 +46,7 @@ export const contacts: readonly Contact[] = [
     label: 'Resume',
     image: resumeImage,
     logo: resumeLogo,
-    unavailable: 'Not available yet',
+    href: '/resume.pdf',
+    external: true,
   },
 ]
