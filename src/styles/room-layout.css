@@ -203,10 +203,5 @@
 .playerTarget {
   position: absolute;
   z-index: 3;
-  /* The tight cabinet crop puts the platter near the upper fifth. */
-  top: 17.2%;
-  left: 43.2%;
-  width: 24%;
-  aspect-ratio: 1;
   transform: translate(-50%, -50%);
 }

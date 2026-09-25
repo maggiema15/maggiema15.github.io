@@ -1,0 +1,27 @@
+.motionDevPanel {
+  position: fixed;
+  z-index: 25;
+  left: 1rem;
+  bottom: 1rem;
+  max-width: calc(100vw - 2rem);
+  color: #3b3026;
+  background: #eee3ca;
+  border: 1px solid #a99573;
+  border-radius: 3px;
+  box-shadow: 2px 3px 8px rgb(20 15 12 / 22%);
+  font: 0.8rem/1.5 system-ui, sans-serif;
+}
+.motionDevPanel summary { padding: 0.65rem 0.9rem; min-height: 2.75rem; cursor: pointer; }
+.motionDevPanel summary span { margin-left: 0.4rem; font-size: 0.65rem; text-transform: uppercase; opacity: 0.65; }
+.motionDevBody { padding: 0 1rem 1rem; width: min(18rem, calc(100vw - 2rem)); }
+.motionDevBody fieldset { border: 0; padding: 0; margin: 0 0 0.85rem; }
+.motionDevBody legend { font-weight: 650; margin-bottom: 0.35rem; }
+.motionDevBody label { display: flex; align-items: center; gap: 0.55rem; min-height: 2.75rem; }
+.motionDevBody input { accent-color: #59613e; }
+.motionDevSpeed { justify-content: space-between; }
+.motionDevBody select, .motionDevBody button { font: inherit; padding: 0.5rem; border: 1px solid #a99573; border-radius: 2px; color: inherit; background: #f6eddc; }
+.motionDevBody button { margin-top: 0.6rem; min-height: 2.75rem; width: 100%; cursor: pointer; }
+.motionDevBody button:disabled { opacity: 0.5; cursor: default; }
+.motionDevBody p { margin: 0.8rem 0 0; font-size: 0.72rem; }
+.motionDevPanel :focus-visible { outline: 2px solid #9f2f24; outline-offset: 2px; }
+@media (max-width: 540px) { .motionDevPanel { bottom: 4.75rem; } }

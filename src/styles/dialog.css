@@ -15,7 +15,7 @@
   animation: bookletBackdropEnter 280ms ease both;
 }
 
-.portfolioOverlayPosition.isClosing { animation: bookletBackdropExit 240ms ease both; }
+.portfolioOverlayPosition.isClosing { animation: bookletBackdropExit var(--record-close-duration, 240ms) ease both; }
 
 .portfolioOverlay {
   position: relative;
@@ -35,7 +35,7 @@
   animation: bookletEnter 320ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
 }
 
-.portfolioOverlay.isClosing { pointer-events: none; animation: overlayExit 240ms ease both; }
+.portfolioOverlay.isClosing { pointer-events: none; animation: overlayExit var(--record-close-duration, 240ms) ease both; }
 .portfolioOverlay p { margin: 0; }
 
 .portfolioContent {
