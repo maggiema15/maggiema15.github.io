@@ -86,11 +86,15 @@
 .closeButton:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .closeButton:disabled { cursor: default; }
 
-.bookletSpread { display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr); }
+.bookletSpread { display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr); align-items: start; }
 .bookletIdentity {
+  position: sticky;
+  top: 0;
+  align-self: start;
   display: flex;
   flex-direction: column;
   min-width: 0;
+  min-height: calc(100svh - 10.4rem);
   padding: clamp(1.8rem, 3.2vw, 3.25rem);
   background: linear-gradient(90deg, transparent 92%, rgb(80 57 34 / 8%) 99%, rgb(80 57 34 / 17%));
   border-right: 1px solid rgb(111 86 55 / 25%);
@@ -140,41 +144,50 @@
 .notesPageHeading { align-items: center; padding-bottom: 1.4rem; border-bottom: 3px double var(--rule); color: var(--accent); }
 .notesPageHeading > :last-child { text-align: right; font-size: 0.58rem; }
 .bookletNotes h2 { margin: 0.32rem 0 0.5rem; font-size: clamp(1.25rem, 1.9vw, 1.9rem); font-weight: 400; letter-spacing: -0.03em; line-height: 1.15; }
-.portfolioOverlay .entryDescription { max-width: 39ch; font-size: 0.95rem; line-height: 1.65; color: #665743; }
-.portfolioOverlay .trackCategory { font-family: 'Courier New', monospace; font-size: 0.58rem; line-height: 1.5; letter-spacing: 0.055em; text-transform: uppercase; color: #76634c; }
-.entryFootnote { display: block; margin-top: 0.9rem; font-size: 0.7rem; font-style: italic; color: var(--accent); }
+.bookletNotes .entryDescription, .bookletNotes .entryList {
+  max-width: 68ch;
+  margin-top: 0.9rem;
+  color: #665743;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+.bookletNotes .entryMeta {
+  margin-top: 0.55rem;
+  color: #76634c;
+  font: 0.73rem/1.5 'Courier New', monospace;
+  overflow-wrap: anywhere;
+}
+.bookletNotes h2 + .entryMeta { margin-top: 0.5rem; }
+.bookletNotes .entryMeta + .entryMeta { margin-top: 0.25rem; }
+.bookletNotes .entryList { padding-left: 1.3rem; }
+.bookletNotes .entryList > li { padding-left: 0.15rem; }
+.bookletNotes .entryList > li + li { margin-top: 0.65rem; }
+.bookletNotes .entryDescription + .entryDescription { margin-top: 1rem; }
 .bookletColophon { padding-top: 1.6rem; font-size: 0.57rem; color: #73624b; }
 
 /* Projects read like the tracklist on the reverse of a record sleeve. */
 .projectTracks { list-style: none; padding: 0; margin: 0; }
-.projectTracks li { display: grid; grid-template-columns: 2.3rem minmax(0, 1fr); gap: 0.65rem; padding: 1.8rem 0; border-bottom: 1px solid var(--rule); }
+.projectTracks > li { display: grid; grid-template-columns: 2.3rem minmax(0, 1fr); gap: 0.65rem; padding: 1.8rem 0; border-bottom: 1px solid var(--rule); }
 .trackNumber { font-size: 1.9rem; font-style: italic; line-height: 1; color: var(--accent); }
 
-/* Short biography, with printed labels beside each note. */
+/* About copy remains easy to read without invented biographical labels. */
 .aboutIntroduction { padding: 2rem 0; border-bottom: 1px solid var(--rule); }
 .aboutIntroduction h2 { margin: 0.7rem 0 1rem; font-size: clamp(1.8rem, 2.7vw, 2.6rem); }
-.aboutIntroduction > p:last-child { font-size: 1.05rem; line-height: 1.75; color: #665743; }
-.biographyNotes { margin: 0; }
-.biographyNotes > div { display: grid; grid-template-columns: 6rem minmax(0, 1fr); gap: 1rem; padding: 1.5rem 0; border-bottom: 1px solid var(--rule); }
-.biographyNotes dt { color: var(--accent); font-size: 0.9rem; font-style: italic; }
-.biographyNotes dd { margin: 0; color: #665743; font-size: 0.9rem; line-height: 1.65; }
-
-/* Chronology: a continuous rule connects the three sample chapters. */
+.aboutIntroduction .entryDescription { font-size: 1.05rem; line-height: 1.75; }
+/* Chronology: a continuous rule connects the experience entries. */
 .experienceTimeline { list-style: none; margin: 1.8rem 0 0 0.35rem; padding: 0 0 0 1.8rem; border-left: 1px solid var(--rule); }
-.experienceTimeline li { position: relative; padding: 0 0 2rem; }
-.experienceTimeline li:last-child { padding-bottom: 0.5rem; }
-.experienceTimeline li::before { position: absolute; top: 0.3rem; left: -2.08rem; width: 0.5rem; height: 0.5rem; background: var(--accent); border-radius: 50%; content: ''; }
-.portfolioOverlay .timelinePeriod { margin-bottom: 0.6rem; color: var(--accent); }
-.experienceTimeline .entryDescription { margin-top: 0.9rem; }
+.experienceTimeline > li { position: relative; padding: 0 0 2rem; }
+.experienceTimeline > li:last-child { padding-bottom: 0.5rem; }
+.experienceTimeline > li::before { position: absolute; top: 0.3rem; left: -2.08rem; width: 0.5rem; height: 0.5rem; background: var(--accent); border-radius: 50%; content: ''; }
 
 /* Skills are grouped like credits, without invented proficiency ratings. */
-.portfolioOverlay .sectionNote { margin: 1.4rem 0; font-size: 0.9rem; line-height: 1.65; font-style: italic; color: #665743; }
+.portfolioOverlay .sectionNote, .portfolioOverlay .sampleNote { margin-top: 1.4rem; font-size: 0.9rem; line-height: 1.65; color: #665743; }
+.portfolioOverlay .sampleNote { margin-top: 0.5rem; font-style: italic; }
 .skillGroups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 1.8rem; }
 .skillGroups section { padding: 1.2rem 0; border-bottom: 1px solid var(--rule); }
 .skillGroups .printLabel { color: var(--accent); }
 .skillGroups h2 { margin-top: 0.65rem; font-size: 1.4rem; }
-.skillGroups ul { list-style: none; padding: 0; margin: 1rem 0 0; }
-.skillGroups li { padding: 0.3rem 0; font-size: 0.9rem; line-height: 1.4; color: #665743; }
 
 /* Ranked sleeve grid; current entries are explicitly illustrative. */
 .rankedAlbums { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.6rem 1.3rem; list-style: none; padding: 0; margin: 1.6rem 0 0; }
@@ -200,9 +213,9 @@
   .portfolioOverlayPosition { padding: 2rem; }
   .portfolioOverlay { width: 100%; max-height: calc(100svh - 4rem); }
   .bookletIdentity, .bookletNotes { padding: 1.8rem; }
-  .projectTracks li { padding: 1.4rem 0; }
-  .skillGroups { gap: 0 1.1rem; }
-  .biographyNotes > div { grid-template-columns: 1fr; gap: 0.5rem; }
+  .bookletIdentity { min-height: calc(100svh - 7.4rem); }
+  .projectTracks > li { padding: 1.4rem 0; }
+  .skillGroups { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 600px) {
@@ -212,7 +225,7 @@
   .bookletBarLabel { font-size: 0.6rem; }
   .closeLabel { display: none; }
   .bookletSpread { grid-template-columns: minmax(0, 1fr); }
-  .bookletIdentity { padding: 1.65rem; border-right: 0; border-bottom: 1px solid var(--rule); background: linear-gradient(0deg, rgb(80 57 34 / 7%), transparent 12%); }
+  .bookletIdentity { position: static; min-height: 0; padding: 1.65rem; border-right: 0; border-bottom: 1px solid var(--rule); background: linear-gradient(0deg, rgb(80 57 34 / 7%), transparent 12%); }
   .pressingMeta { font-size: 0.55rem; margin-bottom: 1.8rem; }
   .bookletCover { width: 48%; max-width: 10rem; margin-bottom: 1.65rem; }
   .portfolioOverlay h1 { font-size: 3.9rem; }
@@ -221,7 +234,7 @@
   .identityFootnote { margin-top: 1.75rem; }
   .bookletNotes { padding: 1.65rem; }
   .projectTracks h2 { font-size: 1.4rem; }
-  .projectTracks li { grid-template-columns: 1.8rem minmax(0, 1fr); }
+  .projectTracks > li { grid-template-columns: 1.8rem minmax(0, 1fr); }
   .skillGroups h2 { font-size: 1.2rem; }
   .portfolioOverlay .nowPlaying { font-size: 0.55rem; letter-spacing: 0; }
 }
@@ -230,7 +243,6 @@
   .portfolioOverlay h1 { font-size: 3.4rem; }
   [data-booklet-section='experience'] h1 { font-size: 2.2rem; }
   .pressingMeta { font-size: 0.48rem; }
-  .skillGroups { grid-template-columns: 1fr; }
 }
 
 .room[data-reduced-motion='true'] .portfolioOverlayPosition,

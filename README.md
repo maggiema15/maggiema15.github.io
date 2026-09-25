@@ -32,7 +32,7 @@ The production build is written to `dist/`. The site is static; it has no backen
 | System/site motion preference and persistence | `src/hooks/useMotionPreference.ts` |
 | Popup placement, sizing, appearance, enter/exit animation | `src/styles/dialog.css` |
 | Booklet layout and section-specific content | `src/components/PortfolioBooklet.tsx` |
-| Booklet introductions and placeholder entries | `src/data/booklet.ts` |
+| Booklet introductions and sample album sleeves | `src/data/booklet.ts` |
 | Section selection, record geometry, animation lifecycle | `src/hooks/useRecordPlayback.ts` |
 | Popup keyboard navigation and focus containment | `src/components/PortfolioDialog.tsx` |
 | Component composition | `src/App.tsx` |
@@ -65,13 +65,13 @@ The dialog focuses Close when opened, contains Tab/Shift+Tab, supports Escape, a
 
 All five records open the same warm-paper booklet shell, in both development and production. Desktop has facing pages with the section's album artwork and introduction on the left, and its content on the right. Phones stack the pages into a scrollable reading surface. The top bar and Close stay visible while the content scrolls. The room dims behind the booklet, and the record returns to its sleeve after the booklet closes.
 
-- About: introduction and labeled biographical notes.
-- Projects: numbered project tracklist.
-- Experiences: chronology, newest first.
-- Skills: grouped category lists, without proficiency scores.
-- Top 100 Albums: ranked cover grid.
+- About: introduction and personal background.
+- Projects: numbered tracklist with project details and technologies.
+- Experiences: chronology with roles, dates, and work details.
+- Skills: grouped categories and supporting descriptions.
+- Top 100 Albums: sample cover grid.
 
-Content remains illustrative. Edit `src/data/booklet.ts` to replace sample descriptions, relative timeline periods, and skill categories. The album grid reuses five existing sleeve images to demonstrate the layout; it is explicitly labeled as a sample sequence, not an actual ranking. Add real album metadata and ranks when the collection is ready. Section titles, IDs, and shelf artwork remain in `src/data/portfolio.ts`. The temporary A/B controls and design query parameter have been removed.
+About, Projects, Experiences, and Skills render the full content from `src/data/portfolio.ts`, preserving the order of headings, metadata, paragraphs, and lists. The booklet framing text and sample album sleeves live in `src/data/booklet.ts`. The album grid reuses five existing sleeve images to demonstrate the layout; it is explicitly labeled as a sample sequence, not an actual ranking. Add real album metadata and ranks when the collection is ready. The temporary A/B controls and design query parameter have been removed.
 
 ## Browser checks after changes
 
@@ -79,11 +79,12 @@ Content remains illustrative. Edit `src/data/booklet.ts` to replace sample descr
 - Use Tab and Shift+Tab in the popup; confirm focus returns to the selected album.
 - Resize during flight, playback, and return. Change reduced-motion preferences with an animation active.
 - Check that the disc's rotation does not reset at landing and that a performance trace shows no recurring layout work during flight.
-- Check each section's content layout, especially long headings, biography labels, skill groups, and the album grid.
+- Check each section's content layout, especially long headings, project lists, skill groups, and the album grid.
 - Check desktop (1440×900), tablet (768×1024), phone (390×844 and 320×568), and landscape (844×390).
 - On phones, confirm the popup and Close button remain onscreen during opening and closing. Check longer content scrolls inside the panel.
+- Confirm the Resume vinyl opens the bundled PDF, including in the production build.
 - Compare the resting room against its previous appearance for accidental placement changes.
 
 ## Remaining design work
 
-Existing objects now follow the supplied reference, with covers seated on their shelves and clear spacing between the main objects. Artwork proportions are preserved; the current cabinet is taller than the reference cabinet, so it is slightly narrower to fit between the lower shelf and the floor. Small text on phones and image-size optimization remain for a later pass. All section content is currently placeholder text; Resume is visibly unavailable until a destination is provided.
+Existing objects now follow the supplied reference, with covers seated on their shelves and clear spacing between the main objects. Artwork proportions are preserved; the current cabinet is taller than the reference cabinet, so it is slightly narrower to fit between the lower shelf and the floor. Small text on phones and image-size optimization remain for a later pass. The Top 100 Albums grid is still illustrative; the Resume vinyl links to the bundled PDF.

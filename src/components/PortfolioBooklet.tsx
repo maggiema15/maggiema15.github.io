@@ -1,88 +1,117 @@
-import { portfolioSections, type PortfolioSection, type SectionId } from '../data/portfolio'
-import { aboutNotes, albumSamples, bookletNotes, experienceEntries, projectTracks, skillGroups } from '../data/booklet'
+import { portfolioSections, type ContentBlock, type PortfolioSection } from '../data/portfolio'
+import { albumSamples, bookletNotes } from '../data/booklet'
 
 const number = (value: number) => String(value).padStart(2, '0')
 
-function SectionContent({ id }: { id: SectionId }) {
-  switch (id) {
-    case 'about':
-      return (
-        <div className="aboutNotes">
-          <section className="aboutIntroduction">
-            <p className="printLabel">An introduction</p>
-            <h2>A little background.</h2>
-            <p>A space for a personal introduction, a few interests, and the story behind this collection.</p>
-          </section>
-          <dl className="biographyNotes">
-            {aboutNotes.map(note => (
-              <div key={note.title}><dt>{note.title}</dt><dd>{note.description}</dd></div>
-            ))}
-          </dl>
-        </div>
-      )
-    case 'projects':
-      return (
-        <ol className="projectTracks">
-          {projectTracks.map((track, index) => (
-            <li key={track.title}>
-              <span className="trackNumber" aria-hidden="true">{number(index + 1)}</span>
-              <div>
-                <p className="trackCategory">{track.category}</p>
-                <h2>{track.title}</h2>
-                <p className="entryDescription">{track.description}</p>
-                <span className="entryFootnote">Notes to come</span>
-              </div>
-            </li>
-          ))}
-        </ol>
-      )
-    case 'experience':
-      return (
-        <ol className="experienceTimeline">
-          {experienceEntries.map(entry => (
-            <li key={entry.period}>
-              <p className="printLabel timelinePeriod">{entry.period}</p>
-              <h2>{entry.title}</h2>
-              <p className="trackCategory">{entry.category}</p>
-              <p className="entryDescription">{entry.description}</p>
-            </li>
-          ))}
-        </ol>
-      )
-    case 'skills':
-      return (
-        <div className="skillsContent">
-          <p className="sectionNote">A place for skills and tools. Sample categories below; details to come.</p>
-          <div className="skillGroups">
-            {skillGroups.map((group, index) => (
-              <section key={group.title}>
-                <span className="printLabel">Side {number(index + 1)}</span>
-                <h2>{group.title}</h2>
-                <ul>{group.items.map(item => <li key={item}>{item}</li>)}</ul>
-              </section>
-            ))}
-          </div>
-        </div>
-      )
-    case 'albums':
-      return (
-        <div className="albumCollectionNotes">
-          <p className="sectionNote">A hundred records, eventually. Sample sleeves below; the final ranking is still to come.</p>
-          <ol className="rankedAlbums">
-            {albumSamples.map((album, index) => (
-              <li key={album.image}>
-                <div className="rankedAlbumArtwork">
-                  <img src={album.image} alt="" loading="lazy" />
-                  <span className="albumRank" aria-hidden="true">{number(index + 1)}</span>
-                </div>
-                <h2>Album title</h2>
-                <p>Artist · notes to come</p>
-              </li>
-            ))}
-          </ol>
-        </div>
-      )
+// A heading starts a new printed entry; all following blocks stay in their source order.
+function splitEntries(blocks: readonly ContentBlock[]): ContentBlock[][] {
+  const entries: ContentBlock[][] = []
+  let current: ContentBlock[] = []
+  for (const block of blocks) {
+    if (block.type === 'heading' && current.length) {
+      entries.push(current)
+      current = []
+    }
+    current.push(block)
   }
+  if (current.length) entries.push(current)
+  return entries
+}
+
+function EntryBlocks({ blocks }: { blocks: readonly ContentBlock[] }) {
+  return (
+    <>
+      {blocks.map((block, index) => {
+        switch (block.type) {
+          case 'heading':
+            return <h2 key={index}>{block.text}</h2>
+          case 'meta':
+            return <p key={index} className="entryMeta">{block.text}</p>
+          case 'paragraph':
+            return <p key={index} className="entryDescription">{block.text}</p>
+          case 'list':
+            return (
+              <ul key={index} className="entryList">
+                {block.items.map((item) => <li key={item}>{item}</li>)}
+              </ul>
+            )
+        }
+      })}
+    </>
+  )
+}
+
+function SectionContent({ section }: { section: PortfolioSection }) {
+  if (section.id === 'albums') {
+    return (
+      <div className="albumCollectionNotes">
+        <p className="sectionNote">{typeof section.description === 'string' ? section.description : 'A personal ranking of favorite albums will appear here.'}</p>
+        <p className="sampleNote">Sample sleeves below; the final ranking is still to come.</p>
+        <ol className="rankedAlbums">
+          {albumSamples.map((album, index) => (
+            <li key={album.image}>
+              <div className="rankedAlbumArtwork">
+                <img src={album.image} alt="" loading="lazy" />
+                <span className="albumRank" aria-hidden="true">{number(index + 1)}</span>
+              </div>
+              <h2>Album title</h2>
+              <p>Artist · notes to come</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    )
+  }
+
+  if (typeof section.description === 'string') {
+    return <p className="entryDescription">{section.description}</p>
+  }
+
+  const entries = splitEntries(section.description)
+  if (section.id === 'about') {
+    return (
+      <div className="aboutNotes">
+        <section className="aboutIntroduction">
+          <p className="printLabel">An introduction</p>
+          <h2>A little background.</h2>
+          <EntryBlocks blocks={section.description} />
+        </section>
+      </div>
+    )
+  }
+  if (section.id === 'projects') {
+    return (
+      <ol className="projectTracks">
+        {entries.map((entry, index) => (
+          <li key={index}>
+            <span className="trackNumber" aria-hidden="true">{number(index + 1)}</span>
+            <div><EntryBlocks blocks={entry} /></div>
+          </li>
+        ))}
+      </ol>
+    )
+  }
+  if (section.id === 'experience') {
+    return (
+      <ol className="experienceTimeline">
+        {entries.map((entry, index) => (
+          <li key={index}><EntryBlocks blocks={entry} /></li>
+        ))}
+      </ol>
+    )
+  }
+  return (
+    <div className="skillsContent">
+      <div className="skillGroups">
+        {entries.map((entry, index) => (
+          <section key={index}>
+            <span className="printLabel">Side {number(index + 1)}</span>
+            <EntryBlocks blocks={entry} />
+          </section>
+        ))}
+      </div>
+    </div>
+  )
 }
 
 export function PortfolioBooklet({ section, titleId }: { section: PortfolioSection; titleId: string }) {
@@ -105,8 +134,8 @@ export function PortfolioBooklet({ section, titleId }: { section: PortfolioSecti
       </header>
       <div className="bookletNotes">
         <div className="notesPageHeading"><span className="printLabel">{notes.heading}</span><span>{notes.detail}</span></div>
-        <SectionContent id={section.id} />
-        <footer className="bookletColophon"><span>A collection in progress</span><span>MM — 0{volume}</span></footer>
+        <SectionContent section={section} />
+        <footer className="bookletColophon"><span>{section.id === 'albums' ? 'A collection in progress' : 'Selected work and notes'}</span><span>MM — 0{volume}</span></footer>
       </div>
     </div>
   )
