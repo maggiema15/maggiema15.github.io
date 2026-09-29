@@ -99,7 +99,10 @@
   background: linear-gradient(90deg, transparent 92%, rgb(80 57 34 / 8%) 99%, rgb(80 57 34 / 17%));
   border-right: 1px solid rgb(111 86 55 / 25%);
 }
-.bookletCover { width: min(64%, 15rem); margin: 0 auto 2rem; }
+.bookletCover {
+  width: min(82%, 42svh, 21rem);
+  margin: clamp(3rem, 2.5svh, 1.5rem) auto 2rem;
+}
 .bookletCover img {
   display: block;
   width: 100%;
@@ -239,7 +242,7 @@
   .bookletSpread { grid-template-columns: minmax(0, 1fr); height: auto; }
   .bookletIdentity { position: static; min-height: 0; padding: 1.65rem; border-right: 0; border-bottom: 1px solid var(--rule); background: linear-gradient(0deg, rgb(80 57 34 / 7%), transparent 12%); }
   .bookletNotes { overflow-y: visible; }
-  .bookletCover { width: 48%; max-width: 10rem; margin-bottom: 1.65rem; }
+  .bookletCover { width: 60%; max-width: 12rem; margin-top: 0.5rem; margin-bottom: 1.65rem; }
   .portfolioOverlay h1 { font-size: 3.9rem; }
   [data-booklet-section='experience'] h1 { font-size: clamp(2.2rem, 10vw, 3.6rem); }
   .bookletNotes { padding: 1.65rem; }

@@ -59,8 +59,9 @@
 .guitarMount {
   position: absolute;
   z-index: var(--layer-foreground);
-  top: calc(100% * 94 / 941);
-  left: calc(100% * 128 / 1672);
+  top: calc(100% * 72 / 941);
+  left: calc(100% * 75 / 1672);
+  /* rotate: -5deg; */
   width: calc(100% * 156 / 1672);
   pointer-events: none;
 }
