@@ -168,11 +168,47 @@
 .experienceTimeline > li:last-child { padding-bottom: 0.5rem; }
 .experienceTimeline > li::before { position: absolute; top: 0.3rem; left: -2.08rem; width: 0.5rem; height: 0.5rem; background: var(--accent); border-radius: 50%; content: ''; }
 
-/* Skills are grouped like credits, without invented proficiency ratings. */
+/* Skills use compact, scannable tags without invented proficiency ratings. */
 .portfolioOverlay .sectionNote { font-size: 0.9rem; line-height: 1.65; color: #665743; }
-.skillGroups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 1.8rem; }
-.skillGroups section { padding: 1.2rem 0; border-bottom: 1px solid var(--rule); }
-.skillGroups h2 { font-size: 1.4rem; }
+.skillGroups {
+  display: grid;
+  gap: 1.45rem;
+}
+.skillGroups section {
+  padding: 0 0 1.35rem;
+  border-bottom: 1px solid var(--rule);
+}
+.skillGroups section:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+.skillGroups h2 {
+  margin: 0 0 0.75rem;
+  color: var(--accent);
+  font: 700 0.78rem/1.2 'Courier New', monospace;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+.skillTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 1rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.skillTags li {
+  display: inline-flex;
+  align-items: center;
+  color: #554735;
+  font: 700 0.78rem/1.35 'Courier New', monospace;
+  white-space: nowrap;
+}
+.skillTags li::before {
+  margin-right: 0.38rem;
+  color: #a07e43;
+  content: '•';
+}
 
 
 @keyframes bookletBackdropEnter { from { opacity: 0; } to { opacity: 1; } }
@@ -192,7 +228,6 @@
   .portfolioOverlay { width: 100%; height: calc(100svh - 4rem); max-height: calc(100svh - 4rem); }
   .bookletIdentity, .bookletNotes { padding: 1.8rem; }
   .projectTracks > li { padding: 1.4rem 0; }
-  .skillGroups { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 600px) {
@@ -210,7 +245,9 @@
   .bookletNotes { padding: 1.65rem; }
   .projectTracks h2 { font-size: 1.4rem; }
   .projectTracks > li { grid-template-columns: 1.8rem minmax(0, 1fr); }
-  .skillGroups h2 { font-size: 1.2rem; }
+  .skillGroups { gap: 1.2rem; }
+  .skillTags { gap: 0.45rem 0.8rem; }
+  .skillTags li { font-size: 0.72rem; }
 }
 
 @media (max-width: 360px) {

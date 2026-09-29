@@ -40,6 +40,29 @@ function EntryBlocks({ blocks }: { blocks: readonly ContentBlock[] }) {
   )
 }
 
+function SkillGroups({ entries }: { entries: readonly (readonly ContentBlock[])[] }) {
+  return (
+    <div className="skillGroups">
+      {entries.map((entry, index) => {
+        const heading = entry.find((block) => block.type === 'heading')
+        const skills = entry.flatMap((block) =>
+          block.type === 'meta'
+            ? block.text.split('|').map((skill) => skill.trim()).filter(Boolean)
+            : [])
+
+        return (
+          <section key={heading?.type === 'heading' ? heading.text : index}>
+            {heading?.type === 'heading' && <h2>{heading.text}</h2>}
+            <ul className="skillTags" aria-label={heading?.type === 'heading' ? heading.text : undefined}>
+              {skills.map((skill) => <li key={skill}>{skill}</li>)}
+            </ul>
+          </section>
+        )
+      })}
+    </div>
+  )
+}
+
 function SectionContent({ section }: { section: PortfolioSection }) {
   if (section.id === 'albums') {
     return (
@@ -86,13 +109,7 @@ function SectionContent({ section }: { section: PortfolioSection }) {
   }
   return (
     <div className="skillsContent">
-      <div className="skillGroups">
-        {entries.map((entry, index) => (
-          <section key={index}>
-            <EntryBlocks blocks={entry} />
-          </section>
-        ))}
-      </div>
+      <SkillGroups entries={entries} />
     </div>
   )
 }
