@@ -25,21 +25,22 @@ export function AlbumCollection({ selectedId, busy, inert, onSelect }: Props) {
         <div key={shelf.id} className={`albumShelf ${shelf.id}Shelf`}>
           <img className="rackImage" src={shelf.image} alt="" aria-hidden="true" />
           {portfolioSections.filter((section) => shelf.sections.includes(section.id)).map((section) => (
-            <button
-              key={section.id}
-              type="button"
-              data-section={section.id}
-              className={`vinylCover${selectedId === section.id ? ' isSelected' : ''}`}
-              aria-label={`Open ${section.title}`}
-              title={`Open ${section.title}`}
-              aria-haspopup="dialog"
-              aria-pressed={selectedId === section.id}
-              disabled={busy}
-              onClick={(event) => onSelect(section, event.currentTarget)}
-            >
-              <img src={section.image} alt="" />
-              <span className="vinylTitle">{section.title}</span>
-            </button>
+            <div key={section.id} data-album-section={section.id} className="vinylSlot">
+              <button
+                type="button"
+                data-section={section.id}
+                className={`vinylCover${selectedId === section.id ? ' isSelected' : ''}`}
+                aria-label={`Open ${section.title}`}
+                title={`Open ${section.title}`}
+                aria-haspopup="dialog"
+                aria-pressed={selectedId === section.id}
+                disabled={busy}
+                onClick={(event) => onSelect(section, event.currentTarget)}
+              >
+                <img src={section.image} alt="" />
+              </button>
+              <span className="vinylTitle" aria-hidden="true">{section.title}</span>
+            </div>
           ))}
           <img className="rackImage rackLip" src={shelf.image} alt="" aria-hidden="true" />
         </div>

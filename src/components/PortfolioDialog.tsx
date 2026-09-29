@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef } from 'react'
 import type { PortfolioSection } from '../data/portfolio'
+import { PortfolioBooklet } from './PortfolioBooklet'
 
 type Props = {
   section: PortfolioSection
@@ -67,7 +68,12 @@ export function PortfolioDialog({ section, closing, onClose, onComplete }: Props
   }, [onClose])
 
   return (
-    <div className="portfolioOverlayPosition">
+    <div
+      className={`portfolioOverlayPosition${closing ? ' isClosing' : ''}`}
+      onClick={(event) => {
+        if (!closing && event.target === event.currentTarget) onClose()
+      }}
+    >
       <section
         ref={dialogRef}
         className={`portfolioOverlay${closing ? ' isClosing' : ''}`}
@@ -79,38 +85,22 @@ export function PortfolioDialog({ section, closing, onClose, onComplete }: Props
           if (event.target === event.currentTarget) onComplete(event.animationName)
         }}
       >
-        <button
-          ref={closeRef}
-          type="button"
-          className="closeButton"
-          aria-label="Close portfolio section"
-          disabled={closing}
-          onClick={onClose}
-        >
-          ×
-        </button>
+        <div className="bookletBar">
+          <span className="bookletBarLabel">Maggie Ma · {section.title}</span>
+          <button
+            ref={closeRef}
+            type="button"
+            className="closeButton"
+            aria-label="Close portfolio section"
+            disabled={closing}
+            onClick={onClose}
+          >
+            <span className="closeLabel">Back to the room</span>
+            <span className="closeIcon" aria-hidden="true">×</span>
+          </button>
+        </div>
         <div className="portfolioContent">
-          <p className="overlayEyebrow">Now playing</p>
-          <h1 id={titleId}>{section.title}</h1>
-          {typeof section.description === 'string' ? (
-            <p>{section.description}</p>
-          ) : (
-            <div className="portfolioCopy">
-              {section.description.map((block, index) => {
-                switch (block.type) {
-                  case 'heading':
-                    return <h2 key={index}>{block.text}</h2>
-                  case 'meta':
-                    return <p key={index} className="portfolioMeta">{block.text}</p>
-                  case 'list':
-                    return <ul key={index}>{block.items.map((item) => <li key={item}>{item}</li>)}</ul>
-                  case 'paragraph':
-                    return <p key={index}>{block.text}</p>
-                }
-              })}
-            </div>
-          )}
-          {section.id === 'albums' && <p className="comingSoon">Content coming soon.</p>}
+          <PortfolioBooklet section={section} titleId={titleId} />
         </div>
       </section>
     </div>

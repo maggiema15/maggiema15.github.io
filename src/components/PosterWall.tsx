@@ -33,6 +33,7 @@ export function PosterWall({ inert }: { inert: boolean }) {
           return contact.href ? (
             <a
               key={contact.id}
+              data-contact={contact.id}
               className="contactVinyl"
               href={contact.href}
               target={contact.external ? '_blank' : undefined}
@@ -42,16 +43,16 @@ export function PosterWall({ inert }: { inert: boolean }) {
               {artwork}
             </a>
           ) : (
-            <span
+            <button
               key={contact.id}
+              data-contact={contact.id}
+              type="button"
               className="contactVinyl"
-              role="link"
-              aria-disabled="true"
-              aria-label={`${contact.label}: ${contact.unavailable}`}
-              title={`${contact.label}: ${contact.unavailable}`}
+              aria-label={contact.label}
+              title={contact.label}
             >
               {artwork}
-            </span>
+            </button>
           )
         })}
       </nav>

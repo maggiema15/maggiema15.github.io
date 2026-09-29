@@ -1,222 +1,259 @@
-/* The position wrapper stays still while the inner panel animates. */
-
-.closeButton:focus-visible {
-  outline: 0.22rem solid #9f2f24;
-  outline-offset: 0.25rem;
-}
-
+/* Shared album booklet: facing pages on desktop, stacked pages on phones. */
 .portfolioOverlayPosition {
+  --paper: #eee3ca;
+  --print: #3b3026;
+  --accent: #59613e;
+  --rule: rgb(74 51 33 / 25%);
   position: fixed;
   z-index: var(--layer-dialog);
-  left: clamp(33%, 42vw, 45%);
-  width: min(54vw, 52rem);
-  --dialog-top: clamp(5rem, 16vh, 10rem);
-  top: var(--dialog-top);
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3.5rem 4vw;
+  background: rgb(25 27 19 / 58%);
+  animation: bookletBackdropEnter 280ms ease both;
 }
+
+.portfolioOverlayPosition.isClosing { animation: bookletBackdropExit 240ms ease both; }
 
 .portfolioOverlay {
   position: relative;
   display: flex;
   flex-direction: column;
-  width: 100%;
-  max-height: calc(100svh - var(--dialog-top) - 1rem);
+  width: min(88vw, 72rem);
+  height: calc(100svh - 7rem);
+  max-height: calc(100svh - 7rem);
   overflow: hidden;
-  padding: clamp(1.45rem, 3vw, 2.5rem);
-  color: var(--ink);
-  background-color: rgb(249 239 219 / 96%);
-  background-image: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 0.25rem,
-    rgb(103 70 44 / 3%) 0.3rem
-  );
-  border: 1px solid rgb(94 57 34 / 62%);
-  border-radius: 0.45rem;
-  box-shadow: 0.45rem 0.75rem 1.5rem rgb(49 31 21 / 25%);
-  animation: overlayEnter 380ms ease forwards;
+  color: var(--print);
+  background-color: var(--paper);
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0 3px, rgb(104 70 31 / 2.5%) 3px 4px),
+    radial-gradient(ellipse at 10% 0%, #faf1da, transparent 75%);
+  border: 1px solid #c5b18a;
+  border-radius: 3px 6px 6px 3px;
+  box-shadow: 2px 2px 0 #d3c4a5, 4px 4px 0 #a8997d, 0 24px 64px rgb(19 16 11 / 36%);
+  animation: bookletEnter 320ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
 }
 
+.portfolioOverlay.isClosing { pointer-events: none; animation: overlayExit 240ms ease both; }
+.portfolioOverlay p { margin: 0; }
+
 .portfolioContent {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.bookletBar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 3.4rem;
+  padding: 0.35rem 0.8rem 0.35rem 1.5rem;
+  border-bottom: 1px solid var(--rule);
+  background: #e6dac0;
+}
+
+.bookletBarLabel, .closeLabel { font: 0.65rem 'Courier New', monospace; color: #625642; }
+.closeButton {
+  display: inline-flex;
+  flex-shrink: 0;
+  gap: 0.85rem;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: 0;
+  color: var(--print);
+  background: transparent;
+  border-radius: 2rem;
+  cursor: pointer;
+}
+.closeIcon {
+  display: grid;
+  width: 2.75rem;
+  aspect-ratio: 1;
+  place-items: center;
+  font-size: 1.7rem;
+  line-height: 1;
+  border: 1px solid var(--rule);
+  border-radius: 50%;
+  transition: background-color 160ms ease;
+}
+.closeButton:hover:not(:disabled) .closeIcon { background: #d7c6a4; }
+.closeButton:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.closeButton:disabled { cursor: default; }
+
+.bookletSpread {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  align-items: stretch;
+  height: 100%;
+}
+.bookletIdentity {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: clamp(1.8rem, 3.2vw, 3.25rem);
+  background: linear-gradient(90deg, transparent 92%, rgb(80 57 34 / 8%) 99%, rgb(80 57 34 / 17%));
+  border-right: 1px solid rgb(111 86 55 / 25%);
+}
+.bookletCover {
+  width: min(82%, 42svh, 21rem);
+  margin: clamp(3rem, 2.5svh, 1.5rem) auto 2rem;
+}
+.bookletCover img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  box-shadow: 2px 4px 7px rgb(42 31 21 / 25%);
+  transform: rotate(-5deg);
+}
+.bookletHeading { margin-top: auto; }
+.portfolioOverlay h1 {
+  margin: 0 0 0.7rem;
+  color: var(--print);
+  font-size: clamp(2.9rem, 5.6vw, 5.6rem);
+  font-weight: 400;
+  letter-spacing: -0.065em;
+  line-height: 0.98;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+.portfolioOverlay h1 > span { color: var(--accent); }
+[data-booklet-section='experience'] h1 { font-size: clamp(2.3rem, 4.3vw, 4.3rem); }
+.portfolioOverlay .bookletIntro { max-width: 28ch; color: #6b5b46; font-size: 1.15rem; font-style: italic; line-height: 1.4; }
+.bookletNotes {
+  min-width: 0;
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
+  padding: clamp(1.8rem, 3.2vw, 3.25rem);
+  scrollbar-color: #a99573 transparent;
+  scrollbar-width: thin;
+  background: linear-gradient(90deg, rgb(255 255 255 / 22%), transparent 9%);
 }
-
-.portfolioOverlay.isClosing {
-  pointer-events: none;
-  animation: overlayExit 240ms ease forwards;
-}
-
-.portfolioOverlay h1 {
-  max-width: 85%;
-  margin: 0 0 0.9rem;
-  color: #47291f;
-  font-size: clamp(1.8rem, 3.3vw, 3rem);
-  line-height: 0.95;
-}
-
-.portfolioOverlay p {
-  margin: 0;
-  font-size: clamp(1rem, 1.4vw, 1.16rem);
-  line-height: 1.55;
-}
-
-.portfolioOverlay .comingSoon {
-  margin-top: 1.4rem;
-  color: #7e3429;
-  font-style: italic;
-}
-
-.portfolioOverlay .overlayEyebrow {
-  margin-bottom: 0.65rem;
-  color: #9c5f36;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.portfolioCopy {
+.bookletNotes h2 { margin: 0.32rem 0 0.5rem; font-size: clamp(1.25rem, 1.9vw, 1.9rem); font-weight: 400; letter-spacing: -0.03em; line-height: 1.15; }
+.bookletNotes .entryDescription, .bookletNotes .entryList {
+  max-width: 68ch;
+  margin-top: 0.9rem;
+  color: #665743;
+  font-size: 0.95rem;
+  line-height: 1.65;
   overflow-wrap: anywhere;
 }
-
-.portfolioCopy > p,
-.portfolioCopy > ul {
-  margin: 1rem 0 0;
+.bookletNotes .entryMeta {
+  margin-top: 0.55rem;
+  color: #76634c;
+  font: 0.73rem/1.5 'Courier New', monospace;
+  overflow-wrap: anywhere;
 }
+.bookletNotes h2 + .entryMeta { margin-top: 0.5rem; }
+.bookletNotes .entryMeta + .entryMeta { margin-top: 0.25rem; }
+.bookletNotes .entryList { padding-left: 1.3rem; }
+.bookletNotes .entryList > li { padding-left: 0.15rem; }
+.bookletNotes .entryList > li + li { margin-top: 0.65rem; }
+.bookletNotes .entryDescription + .entryDescription { margin-top: 1rem; }
 
-.portfolioCopy > p:first-child {
-  margin-top: 0;
-}
+/* Projects read like the tracklist on the reverse of a record sleeve. */
+.projectTracks { list-style: none; padding: 0; margin: 0; }
+.projectTracks > li { display: grid; grid-template-columns: 2.3rem minmax(0, 1fr); gap: 0.65rem; padding: 1.8rem 0; border-bottom: 1px solid var(--rule); }
+.trackNumber { font-size: 1.9rem; font-style: italic; line-height: 1; color: var(--accent); }
 
-.portfolioCopy h2 {
-  margin: 2rem 0 0;
-  padding-top: 1.5rem;
-  border-top: 1px solid rgb(94 57 34 / 22%);
-  color: #47291f;
-  font-size: 1.4rem;
-  line-height: 1.25;
-}
+/* About copy remains easy to read without invented biographical labels. */
+.aboutIntroduction { padding-bottom: 2rem; border-bottom: 1px solid var(--rule); }
+.aboutIntroduction .entryDescription { font-size: 1.05rem; line-height: 1.75; }
+/* Chronology: a continuous rule connects the experience entries. */
+.experienceTimeline { list-style: none; margin: 1.8rem 0 0 0.35rem; padding: 0 0 0 1.8rem; border-left: 1px solid var(--rule); }
+.experienceTimeline > li { position: relative; padding: 0 0 2rem; }
+.experienceTimeline > li:last-child { padding-bottom: 0.5rem; }
+.experienceTimeline > li::before { position: absolute; top: 0.3rem; left: -2.08rem; width: 0.5rem; height: 0.5rem; background: var(--accent); border-radius: 50%; content: ''; }
 
-.portfolioCopy h2:first-child {
-  margin-top: 0;
-  padding-top: 0;
-  border-top: 0;
-}
-
-.portfolioCopy p,
-.portfolioCopy li {
-  font-size: 1.0625rem;
-  line-height: 1.65;
-}
-
-.portfolioCopy .portfolioMeta {
-  color: #7e3429;
-  font-size: 0.9375rem;
-  line-height: 1.5;
-}
-
-.portfolioCopy h2 + .portfolioMeta,
-.portfolioCopy .portfolioMeta + .portfolioMeta {
-  margin-top: 0.4rem;
-}
-
-.portfolioCopy ul {
-  margin-bottom: 0;
-  padding-left: 1.35rem;
-}
-
-.portfolioCopy li + li {
-  margin-top: 0.7rem;
-}
-
-.closeButton {
-  position: absolute;
-  z-index: 1;
-  top: 0.65rem;
-  right: 0.65rem;
+/* Skills use compact, scannable tags without invented proficiency ratings. */
+.portfolioOverlay .sectionNote { font-size: 0.9rem; line-height: 1.65; color: #665743; }
+.skillGroups {
   display: grid;
-  width: 2rem;
-  aspect-ratio: 1;
+  gap: 1.45rem;
+}
+.skillGroups section {
+  padding: 0 0 1.35rem;
+  border-bottom: 1px solid var(--rule);
+}
+.skillGroups section:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+.skillGroups h2 {
+  margin: 0 0 0.75rem;
+  color: var(--accent);
+  font: 700 0.78rem/1.2 'Courier New', monospace;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+.skillTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 1rem;
   padding: 0;
-  color: #fdf5e7;
-  font-size: 1.5rem;
-  line-height: 1;
-  cursor: pointer;
-  background: #6d3728;
-  border-radius: 50%;
-  transition: background-color 160ms ease, transform 160ms ease;
-  place-items: center;
+  margin: 0;
+  list-style: none;
+}
+.skillTags li {
+  display: inline-flex;
+  align-items: center;
+  color: #554735;
+  font: 700 0.78rem/1.35 'Courier New', monospace;
+  white-space: nowrap;
+}
+.skillTags li::before {
+  margin-right: 0.38rem;
+  color: #a07e43;
+  content: '•';
 }
 
-.closeButton:hover:not(:disabled) {
-  background: #9d422f;
-  transform: rotate(8deg) scale(1.05);
+
+@keyframes bookletBackdropEnter { from { opacity: 0; } to { opacity: 1; } }
+@keyframes bookletBackdropExit { from { opacity: 1; } to { opacity: 0; } }
+@keyframes bookletEnter {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-
-.closeButton:disabled {
-  cursor: default;
-}
-
-@keyframes overlayEnter {
-  from {
-    opacity: 0;
-    transform: translateY(1.25rem) scale(0.98);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
+/* The playback hook listens for this finite animation's completion. */
 @keyframes overlayExit {
-  from {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-
-  to {
-    opacity: 0;
-    transform: translateY(0.7rem) scale(0.98);
-  }
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(10px); }
 }
 
-@media (min-width: 901px) and (max-width: 1399px) {
-  .portfolioOverlayPosition {
-    left: 31%;
-    width: 65vw;
-  }
-}
-
-@media (max-width: 900px) {
-  .portfolioOverlayPosition {
-    left: 28%;
-    width: 68vw;
-  }
+@media (max-width: 1000px) {
+  .portfolioOverlayPosition { padding: 2rem; }
+  .portfolioOverlay { width: 100%; height: calc(100svh - 4rem); max-height: calc(100svh - 4rem); }
+  .bookletIdentity, .bookletNotes { padding: 1.8rem; }
+  .projectTracks > li { padding: 1.4rem 0; }
 }
 
 @media (max-width: 600px) {
-  .portfolioOverlayPosition {
-    z-index: var(--layer-mobile-dialog);
-    --dialog-top: auto;
-    bottom: 1rem;
-    left: 50%;
-    width: min(calc(100% - 2rem), 34rem);
-    transform: translateX(-50%);
-  }
-
-  .portfolioOverlay {
-    max-height: min(46svh, 24rem);
-  }
+  .portfolioOverlayPosition { padding: 0.65rem; }
+  .portfolioOverlay { height: calc(100svh - 1.3rem); max-height: calc(100svh - 1.3rem); }
+  .portfolioContent { overflow-y: auto; overscroll-behavior: contain; scrollbar-color: #a99573 transparent; scrollbar-width: thin; }
+  .bookletBar { padding-left: 1rem; gap: 0.5rem; }
+  .closeLabel { display: none; }
+  .bookletSpread { grid-template-columns: minmax(0, 1fr); height: auto; }
+  .bookletIdentity { position: static; min-height: 0; padding: 1.65rem; border-right: 0; border-bottom: 1px solid var(--rule); background: linear-gradient(0deg, rgb(80 57 34 / 7%), transparent 12%); }
+  .bookletNotes { overflow-y: visible; }
+  .bookletCover { width: 60%; max-width: 12rem; margin-top: 0.5rem; margin-bottom: 1.65rem; }
+  .portfolioOverlay h1 { font-size: 3.9rem; }
+  [data-booklet-section='experience'] h1 { font-size: clamp(2.2rem, 10vw, 3.6rem); }
+  .bookletNotes { padding: 1.65rem; }
+  .projectTracks h2 { font-size: 1.4rem; }
+  .projectTracks > li { grid-template-columns: 1.8rem minmax(0, 1fr); }
+  .skillGroups { gap: 1.2rem; }
+  .skillTags { gap: 0.45rem 0.8rem; }
+  .skillTags li { font-size: 0.72rem; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .portfolioOverlay {
-    animation: none;
-  }
-
-  .closeButton {
-    transition: none;
-  }
+@media (max-width: 360px) {
+  .portfolioOverlay h1 { font-size: 3.4rem; }
+  [data-booklet-section='experience'] h1 { font-size: 2.2rem; }
 }

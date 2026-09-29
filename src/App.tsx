@@ -13,6 +13,7 @@ import './styles/dialog.css'
 function App() {
   const { state, playerTargetRef, select, close, completeAnimation } = useRecordPlayback()
   const active = state.phase === 'idle' ? null : state
+  const busy = state.phase !== 'idle'
   const overlayOpen = state.phase === 'spinning' || state.phase === 'closing'
 
   return (
@@ -22,12 +23,12 @@ function App() {
         <RoomDecor />
         <PosterWall inert={overlayOpen} />
         <AlbumCollection
-          selectedId={active?.section.id}
-          busy={active !== null}
+          selectedId={busy ? active?.section.id : undefined}
+          busy={busy}
           inert={overlayOpen}
           onSelect={select}
         />
-        <RecordPlayer targetRef={playerTargetRef} />
+        <RecordPlayer targetRef={playerTargetRef} active={active !== null} />
       </div>
       {active && (
         <RecordDisc
