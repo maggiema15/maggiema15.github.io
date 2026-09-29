@@ -135,6 +135,8 @@
 .contactVinyl {
   --contact-column-offset: 0%;
   --contact-row-offset: 0rem;
+  --vinyl-tilt-x: 2.4deg;
+  --vinyl-tilt-y: -1.5deg;
   position: relative;
   display: block;
   width: 100%;
@@ -142,18 +144,79 @@
   padding: 0;
   outline: none;
   border: 0;
+  border-radius: 50%;
   background: transparent;
+  isolation: isolate;
   pointer-events: auto;
-  transform: translate(var(--contact-column-offset), var(--contact-row-offset));
+  transform:
+    translate(var(--contact-column-offset), var(--contact-row-offset))
+    perspective(24rem)
+    rotateX(var(--vinyl-tilt-x))
+    rotateY(var(--vinyl-tilt-y));
+  transform-style: preserve-3d;
   transition: filter 180ms ease, transform 180ms ease;
 }
 
+.contactVinyl[data-contact="email"],
+.contactVinyl[data-contact="resume"] {
+  --vinyl-tilt-y: 1.5deg;
+}
+
+.contactVinyl::before,
+.contactVinyl::after {
+  position: absolute;
+  z-index: 1;
+  inset: 2.25%;
+  border-radius: 50%;
+  content: '';
+  pointer-events: none;
+}
+
+/* Fine grooves follow the record surface and catch only a little light. */
+.contactVinyl::before {
+  background:
+    repeating-radial-gradient(
+      circle at center,
+      transparent 0 3.2%,
+      rgb(255 244 218 / 7%) 3.45%,
+      transparent 3.72% 5.4%
+    );
+  mask: radial-gradient(circle at center, transparent 0 22%, #000 25%);
+  box-shadow:
+    inset 0.18rem 0.14rem 0.2rem rgb(255 246 222 / 13%),
+    inset -0.28rem -0.32rem 0.34rem rgb(8 6 5 / 30%);
+  mix-blend-mode: soft-light;
+}
+
+/* The directional reflection stays above the artwork like a glossy coating. */
+.contactVinyl::after {
+  z-index: 3;
+  background:
+    radial-gradient(ellipse at 28% 22%, rgb(255 247 222 / 24%), transparent 26%),
+    conic-gradient(
+      from 206deg at center,
+      transparent 0 8%,
+      rgb(255 242 211 / 14%) 13%,
+      transparent 20% 59%,
+      rgb(255 242 211 / 8%) 66%,
+      transparent 73%
+    );
+  box-shadow:
+    inset 0 0 0 1px rgb(255 246 222 / 9%),
+    inset -0.2rem -0.25rem 0.28rem rgb(8 6 5 / 18%);
+  opacity: 0.78;
+}
+
 .contactVinylImage {
+  position: relative;
+  z-index: 0;
   display: block;
   width: 100%;
   height: 100%;
   object-fit: contain;
-  filter: drop-shadow(0.24rem 0.34rem 0.3rem rgb(20 15 12 / 38%));
+  filter:
+    drop-shadow(0.08rem 0.1rem 0.04rem rgb(255 241 213 / 11%))
+    drop-shadow(0.3rem 0.46rem 0.34rem rgb(20 15 12 / 48%));
 }
 
 .contactVinylLogo {
@@ -165,8 +228,12 @@
   width: 17%;
   height: 17%;
   object-fit: contain;
-  filter: sepia(0.2) saturate(0.75) contrast(1.15);
-  transform: translate(-50%, -50%);
+  filter:
+    sepia(0.2)
+    saturate(0.75)
+    contrast(1.15)
+    drop-shadow(0.04rem 0.06rem 0.04rem rgb(18 13 10 / 42%));
+  transform: translate3d(-50%, -50%, 0.12rem);
   pointer-events: none;
 }
 
@@ -189,6 +256,9 @@
   filter: brightness(1.06);
   transform:
     translate(var(--contact-column-offset), calc(var(--contact-row-offset) - 0.12rem))
+    perspective(24rem)
+    rotateX(0.8deg)
+    rotateY(var(--vinyl-tilt-y))
     scale(1.04);
 }
 
