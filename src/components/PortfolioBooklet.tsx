@@ -1,5 +1,4 @@
-import { portfolioSections, type ContentBlock, type PortfolioSection } from '../data/portfolio'
-import { albumSamples, bookletNotes } from '../data/booklet'
+import type { ContentBlock, PortfolioSection } from '../data/portfolio'
 
 const number = (value: number) => String(value).padStart(2, '0')
 
@@ -45,20 +44,7 @@ function SectionContent({ section }: { section: PortfolioSection }) {
   if (section.id === 'albums') {
     return (
       <div className="albumCollectionNotes">
-        <p className="sectionNote">{typeof section.description === 'string' ? section.description : 'A personal ranking of favorite albums will appear here.'}</p>
-        <p className="sampleNote">Sample sleeves below; the final ranking is still to come.</p>
-        <ol className="rankedAlbums">
-          {albumSamples.map((album, index) => (
-            <li key={album.image}>
-              <div className="rankedAlbumArtwork">
-                <img src={album.image} alt="" loading="lazy" />
-                <span className="albumRank" aria-hidden="true">{number(index + 1)}</span>
-              </div>
-              <h2>Album title</h2>
-              <p>Artist · notes to come</p>
-            </li>
-          ))}
-        </ol>
+        <p className="sectionNote">{typeof section.description === 'string' ? section.description : 'Ranking coming soon.'}</p>
       </div>
     )
   }
@@ -72,8 +58,6 @@ function SectionContent({ section }: { section: PortfolioSection }) {
     return (
       <div className="aboutNotes">
         <section className="aboutIntroduction">
-          <p className="printLabel">An introduction</p>
-          <h2>A little background.</h2>
           <EntryBlocks blocks={section.description} />
         </section>
       </div>
@@ -105,7 +89,6 @@ function SectionContent({ section }: { section: PortfolioSection }) {
       <div className="skillGroups">
         {entries.map((entry, index) => (
           <section key={index}>
-            <span className="printLabel">Side {number(index + 1)}</span>
             <EntryBlocks blocks={entry} />
           </section>
         ))}
@@ -115,27 +98,19 @@ function SectionContent({ section }: { section: PortfolioSection }) {
 }
 
 export function PortfolioBooklet({ section, titleId }: { section: PortfolioSection; titleId: string }) {
-  const notes = bookletNotes[section.id]
-  const volume = number(portfolioSections.findIndex(item => item.id === section.id) + 1)
   return (
     <div className="bookletSpread" data-booklet-section={section.id}>
       <header className="bookletIdentity">
-        <div className="pressingMeta"><span>Maggie Ma · Selected notes</span><span>Vol. {volume}</span></div>
         <div className="bookletCover">
           <img src={section.image} alt="" />
-          <span className="coverCaption">From the collection</span>
         </div>
         <div className="bookletHeading">
-          <p className="printLabel nowPlaying"><span aria-hidden="true" />Now playing / Side A</p>
           <h1 id={titleId}>{section.title}<span aria-hidden="true">.</span></h1>
-          <p className="bookletIntro">{notes.intro}</p>
+          <p className="bookletIntro">{section.subtitle}</p>
         </div>
-        <div className="identityFootnote"><span>{notes.footnote}</span><span>33⅓ RPM</span></div>
       </header>
       <div className="bookletNotes">
-        <div className="notesPageHeading"><span className="printLabel">{notes.heading}</span><span>{notes.detail}</span></div>
         <SectionContent section={section} />
-        <footer className="bookletColophon"><span>{section.id === 'albums' ? 'A collection in progress' : 'Selected work and notes'}</span><span>MM — 0{volume}</span></footer>
       </div>
     </div>
   )

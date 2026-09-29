@@ -68,7 +68,12 @@ export function PortfolioDialog({ section, closing, onClose, onComplete }: Props
   }, [onClose])
 
   return (
-    <div className={`portfolioOverlayPosition${closing ? ' isClosing' : ''}`}>
+    <div
+      className={`portfolioOverlayPosition${closing ? ' isClosing' : ''}`}
+      onClick={(event) => {
+        if (!closing && event.target === event.currentTarget) onClose()
+      }}
+    >
       <section
         ref={dialogRef}
         className={`portfolioOverlay${closing ? ' isClosing' : ''}`}
@@ -81,7 +86,7 @@ export function PortfolioDialog({ section, closing, onClose, onComplete }: Props
         }}
       >
         <div className="bookletBar">
-          <span className="bookletBarLabel">Maggie Ma · The collection</span>
+          <span className="bookletBarLabel">Maggie Ma · {section.title}</span>
           <button
             ref={closeRef}
             type="button"
