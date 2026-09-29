@@ -47,10 +47,38 @@
   pointer-events: none;
 }
 .recordTravel.isMoving { z-index: 24; will-change: transform, clip-path; }
-.recordTilt { width: 100%; height: 100%; border-radius: 50%; }
-.recordSurface { position: relative; width: 100%; height: 100%; }
+.recordTilt {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  filter: drop-shadow(0 0.08rem 0.05rem rgb(255 242 214 / 10%));
+}
+.recordSurface {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+.recordSurface::before {
+  position: absolute;
+  z-index: 1;
+  inset: 1.1%;
+  border-radius: 50%;
+  background: repeating-radial-gradient(
+    circle at center,
+    transparent 0 3.4%,
+    rgb(255 244 218 / 6%) 3.62%,
+    rgb(4 3 3 / 8%) 3.86%,
+    transparent 4.12% 5.6%
+  );
+  mask: radial-gradient(circle at center, transparent 0 14%, #000 16%);
+  content: '';
+  pointer-events: none;
+}
 .recordTexture {
   position: absolute;
+  z-index: 0;
   /* Alpha bounds in the 512px source: x=7…504, y=6…502. */
   width: 102.81%;
   height: 102.81%;
@@ -59,6 +87,7 @@
 }
 .recordLabel {
   position: absolute;
+  z-index: 2;
   top: 50%;
   left: 50%;
   width: 25%;
@@ -67,12 +96,17 @@
   border: 1px solid #d5c09a;
   border-radius: 50%;
   background: #e7d7b4;
+  box-shadow:
+    0 0.08rem 0.12rem rgb(12 9 7 / 35%),
+    inset 0.08rem 0.08rem 0.08rem rgb(255 247 225 / 18%),
+    inset -0.08rem -0.1rem 0.1rem rgb(74 54 37 / 18%);
   transform: translate(-50%, -50%);
   animation: recordLabelEnter 200ms ease both;
 }
 .recordLabel img { width: 100%; height: 100%; object-fit: cover; opacity: 0.82; }
 .recordHole {
   position: absolute;
+  z-index: 4;
   top: 50%;
   left: 50%;
   width: 3%;
@@ -85,16 +119,33 @@
 /* Lighting stays fixed while the grooves and paper label rotate beneath it. */
 .recordSheen {
   position: absolute;
+  z-index: 3;
   inset: 0;
   border-radius: 50%;
-  background: conic-gradient(from 30deg, transparent 12%, rgb(250 234 204 / 7%) 23%, transparent 33%, transparent 65%, rgb(250 234 204 / 4%) 74%, transparent 85%);
+  background:
+    radial-gradient(ellipse at 30% 24%, rgb(255 247 226 / 18%), transparent 25%),
+    conic-gradient(
+      from 30deg,
+      transparent 8%,
+      rgb(250 234 204 / 12%) 20%,
+      transparent 31% 63%,
+      rgb(250 234 204 / 7%) 73%,
+      transparent 84%
+    );
+  box-shadow:
+    inset 0.14rem 0.12rem 0.16rem rgb(255 246 222 / 13%),
+    inset -0.24rem -0.28rem 0.3rem rgb(8 6 5 / 28%);
+  pointer-events: none;
 }
 .recordShadow {
   position: fixed;
   z-index: 19;
   border-radius: 50%;
-  background: rgb(22 16 10 / 35%);
-  box-shadow: 0 1px 2px rgb(22 16 10 / 25%);
+  background: rgb(22 16 10 / 38%);
+  box-shadow:
+    0 0.08rem 0.12rem rgb(22 16 10 / 28%),
+    0 0.24rem 0.36rem rgb(22 16 10 / 18%);
+  filter: blur(0.06rem);
   transform: translate(-50%, -50%);
   pointer-events: none;
 }

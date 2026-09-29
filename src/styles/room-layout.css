@@ -52,7 +52,7 @@
 .namePosterDisplay {
   position: absolute;
   top: calc(100% * 72 / 941);
-  left: calc(100% * 376 / 1672);
+  left: calc(100% * 290 / 1672);
   width: calc(100% * 264 / 1672);
 }
 
@@ -69,7 +69,7 @@
   position: absolute;
   z-index: 4;
   top: calc(100% * 462 / 941);
-  left: calc(100% * 304 / 1672);
+  left: calc(100% * 236 / 1672);
   width: calc(100% * 318 / 1672);
   height: calc(100% * 202 / 941);
   pointer-events: auto;
@@ -135,7 +135,8 @@
   position: absolute;
   z-index: var(--layer-wall-objects);
   top: 0;
-  left: calc(100% * 712 / 1672);
+  /* Keep the complete 508px rack centered in the authored scene. */
+  left: calc(50% - (100% * 254 / 1672));
   width: calc(100% * 508 / 1672);
   height: 100%;
 }
@@ -193,9 +194,9 @@
 .playerArea {
   position: absolute;
   z-index: var(--layer-foreground);
-  /* This cabinet is taller than the reference asset; preserve its ratio. */
+  /* Center the cabinet beneath the rack while preserving its source ratio. */
   top: calc(100% * 431 / 941);
-  left: calc(100% * 680 / 1672);
+  left: calc(50% - (100% * 240 / 1672));
   width: calc(100% * 480 / 1672);
   transform: translateY(var(--floor-anchor-shift));
 }
