@@ -1,6 +1,5 @@
 import { useLayoutEffect, useRef } from 'react'
 import vinylImage from '../assests/player/vinyl-v2.png'
-import type { MotionSettings } from '../data/recordPlayer'
 import type { PlaybackPhase, RecordPath } from '../hooks/useRecordPlayback'
 import { Tonearm } from './Tonearm'
 
@@ -8,9 +7,6 @@ type Props = {
   image: string
   phase: PlaybackPhase
   path: RecordPath
-  settings: MotionSettings
-  fromParked: boolean
-  reducedMotion: boolean
   onComplete: (name: string) => void
 }
 
@@ -52,45 +48,39 @@ function flightFrames({ source: s, destination: d }: RecordPath, returning: bool
   return { travel, tilt, shadow }
 }
 
-export function RecordDisc({ image, phase, path, settings, fromParked, reducedMotion, onComplete }: Props) {
+export function RecordDisc({ image, phase, path, onComplete }: Props) {
   const travelRef = useRef<HTMLDivElement>(null)
   const tiltRef = useRef<HTMLDivElement>(null)
   const shadowRef = useRef<HTMLDivElement>(null)
   const surfaceRef = useRef<HTMLDivElement>(null)
   const angleRef = useRef(0)
-  const moving = settings.style === 'transfer' && (phase === 'flying' || phase === 'returning')
+  const moving = phase === 'flying' || phase === 'returning'
 
   useLayoutEffect(() => {
-    if (reducedMotion || !['flying', 'settling', 'playing', 'returning'].includes(phase)
+    if (!['flying', 'settling', 'playing', 'returning'].includes(phase)
       || !travelRef.current || !tiltRef.current) return
     const frames = moving ? flightFrames(path, phase === 'returning') : null
-    const duration = (moving ? (phase === 'returning' ? 620 : 820) : phase === 'playing' ? 1000 : 220) / settings.rate
+    const duration = moving ? (phase === 'returning' ? 620 : 820) : phase === 'playing' ? 1000 : 220
     const options: KeyframeAnimationOptions = { duration, easing: 'linear', fill: 'both' }
-    const { destination: d } = path
-    const localEntry = phase === 'flying' && !fromParked
-    const stillFrames = localEntry ? [
-      { opacity: 0, transform: transform(d.x, d.y - d.size * 0.06, d.size) },
-      { opacity: 1, transform: transform(d.x, d.y, d.size) },
-    ] : [{ opacity: 1 }, { opacity: 1 }]
-    const travel = travelRef.current.animate(frames?.travel ?? stillFrames, options)
+    const travel = travelRef.current.animate(frames?.travel ?? [{ opacity: 1 }, { opacity: 1 }], options)
     const tilt = frames ? tiltRef.current.animate(frames.tilt, options) : null
-    const shadow = shadowRef.current?.animate(frames?.shadow ?? [{ opacity: localEntry ? 0 : 1 }, { opacity: 1 }], options)
+    const shadow = shadowRef.current?.animate(frames?.shadow ?? [{ opacity: 1 }, { opacity: 1 }], options)
     let cancelled = false
     void travel.finished.then(() => {
       if (!cancelled) onComplete(phase === 'playing' ? 'playbackShown'
         : phase === 'settling' ? 'recordSettled' : phase === 'returning' ? 'returnToSleeve' : 'flyToPlayer')
-    }).catch(() => { /* Resize, preference changes, and unmount cancel this sequence. */ })
+    }).catch(() => { /* Resize and unmount cancel this sequence. */ })
     return () => {
       cancelled = true
       travel.cancel()
       tilt?.cancel()
       shadow?.cancel()
     }
-  }, [moving, phase, path, settings.rate, fromParked, reducedMotion, onComplete])
+  }, [moving, phase, path, onComplete])
 
   useLayoutEffect(() => {
     const surface = surfaceRef.current
-    if (!surface || reducedMotion) return
+    if (!surface) return
     const running = phase === 'playing' || phase === 'spinning'
     const starting = phase === 'settling'
     const stopping = phase === 'closing'
@@ -100,7 +90,7 @@ export function RecordDisc({ image, phase, path, settings, fromParked, reducedMo
       { transform: `rotate(${start}deg)` },
       { transform: `rotate(${start + (running ? 360 : 22)}deg)` },
     ], {
-      duration: (running ? 1800 : 220) / settings.rate,
+      duration: running ? 1800 : 220,
       iterations: running ? Infinity : 1,
       easing: running ? 'linear' : starting ? 'cubic-bezier(.55, 0, 1, .45)' : 'cubic-bezier(0, .55, .45, 1)',
       fill: 'forwards',
@@ -112,7 +102,7 @@ export function RecordDisc({ image, phase, path, settings, fromParked, reducedMo
       surface.style.transform = `rotate(${angleRef.current}deg)`
       rotation.cancel()
     }
-  }, [phase, reducedMotion, settings.rate])
+  }, [phase])
 
   const { destination: d, deck } = path
   const engaged = phase === 'settling' || phase === 'playing' || phase === 'spinning'
@@ -122,8 +112,7 @@ export function RecordDisc({ image, phase, path, settings, fromParked, reducedMo
         left: d.x, top: d.y + d.size * 0.012, width: d.size, height: d.size * d.tilt,
         opacity: moving ? 0 : 1,
       }} />
-      <div ref={travelRef} className={`recordTravel ${moving ? 'isMoving' : 'isLanded'}`}
-        data-phase={phase} data-style={settings.style}
+      <div ref={travelRef} className={`recordTravel${moving ? ' isMoving' : ''}`}
         style={{ transform: transform(d.x, d.y, d.size) }} aria-hidden="true">
         <div ref={tiltRef} className="recordTilt" style={{ transform: `scaleY(${d.tilt})` }}>
           <div ref={surfaceRef} className="recordSurface">
@@ -137,7 +126,7 @@ export function RecordDisc({ image, phase, path, settings, fromParked, reducedMo
       <div className="tonearmOverlay" aria-hidden="true" style={{
         left: deck.x, top: deck.y, width: deck.width, height: deck.height,
       }}>
-        <Tonearm engaged={engaged} rate={settings.rate} tilt={d.tilt} />
+        <Tonearm engaged={engaged} tilt={d.tilt} />
       </div>
     </>
   )

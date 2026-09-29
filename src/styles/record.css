@@ -99,5 +99,3 @@
   pointer-events: none;
 }
 @keyframes recordLabelEnter { from { opacity: 0; } to { opacity: 1; } }
-.room[data-reduced-motion='true'] .tonearmImage { transition: none; }
-.room[data-reduced-motion='true'] .recordLabel { animation: none; }

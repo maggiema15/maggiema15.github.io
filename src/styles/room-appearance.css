@@ -352,27 +352,3 @@
   border-radius: 50%;
   pointer-events: none;
 }
-
-.motionControl {
-  position: fixed;
-  z-index: var(--layer-foreground);
-  right: 1rem;
-  bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  min-height: 2.75rem;
-  padding: 0.65rem 0.9rem;
-  color: #3b3026;
-  background: #eee3ca;
-  border: 1px solid #a99573;
-  border-radius: 2px;
-  box-shadow: 2px 3px 8px rgb(20 15 12 / 22%);
-  font-size: 0.8rem;
-  cursor: pointer;
-}
-.motionControl:focus-visible { outline: 3px solid #9f2f24; outline-offset: 3px; }
-.motionIndicator { width: 0.45rem; height: 0.45rem; border: 1px solid #625642; border-radius: 50%; }
-.motionControl[aria-pressed='true'] .motionIndicator { background: #59613e; border-color: #59613e; }
-.room[data-reduced-motion='true'] .vinylCover,
-.room[data-reduced-motion='true'] .contactVinyl { transition: none; }

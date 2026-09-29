@@ -29,10 +29,8 @@ The production build is written to `dist/`. The site is static; it has no backen
 | Colors, image treatments, shadows, local component appearance, layer names | `src/styles/room-appearance.css` |
 | Player layers, record texture, lighting | `src/styles/record.css` |
 | Generated player assets and prompt notes | `src/assests/player/README.md` |
-| Platter/arm anchors and preview settings | `src/data/recordPlayer.ts` |
-| Development motion comparison controls | `src/components/MotionDevPanel.tsx` |
+| Platter and arm anchors | `src/data/recordPlayer.ts` |
 | Continuous flight curve, transform keyframes, travel durations | `src/components/RecordDisc.tsx` |
-| System/site motion preference and persistence | `src/hooks/useMotionPreference.ts` |
 | Popup placement, sizing, appearance, enter/exit animation | `src/styles/dialog.css` |
 | Booklet layout and section-specific content | `src/components/PortfolioBooklet.tsx` |
 | Booklet introductions and sample album sleeves | `src/data/booklet.ts` |
@@ -54,17 +52,13 @@ The `--shelf-seat` percentage identifies the front edge within each trimmed shel
 
 ## Interaction lifecycle
 
-**Lift & place** is the public default: `idle → flying → settling → playing → spinning → closing → returning → idle`. The record slides out from the sleeve's right edge, follows a short 820 ms transfer, and lowers onto the measured platter. Its size changes only to match the destination. A sleeve-edge mask hides the portion still inside the cover. The return takes 620 ms.
+The record animation is always enabled and uses the **Lift & place** sequence at normal speed: `idle → flying → settling → playing → spinning → closing → returning → idle`. The record slides out from the sleeve's right edge, follows a short 820 ms transfer, and lowers onto the measured platter. Its size changes only to match the destination. A sleeve-edge mask hides the portion still inside the cover. The return takes 620 ms.
 
-**Play at turntable** uses the same assets and controller, with a 220 ms local appearance instead of a transfer. Closing parks the arm and leaves a stopped record on the platter (`parked`). Another selection updates the label and starts playback from that position.
+The sequence spends 220 ms settling and spinning up, followed by **1000 ms of visible playback before the booklet opens**. The `playing` phase owns that pause; `spinning` means the booklet is open. Steady rotation takes 1800 ms per revolution (33⅓ rpm). The arm engages after landing, then parks during the 240 ms booklet exit while the record brakes. The disc retains its rotation angle across phase changes. The texture and label rotate under stationary lighting; the contact shadow appears only near the platter.
 
-Both styles spend 220 ms settling and spinning up, followed by **1000 ms of visible playback before the booklet opens**. The `playing` phase owns that pause; `spinning` means the booklet is open. Steady rotation takes 1800 ms per revolution (33⅓ rpm). The arm engages after landing, then parks during the 240 ms booklet exit while the record brakes. The disc retains its rotation angle across phase changes. The texture and label rotate under stationary lighting; the contact shadow appears only near the platter.
-
-`RecordDisc` samples the transfer curve once and runs browser animations on separate travel, tilt, and spin layers. Finite animation completion promises advance the controller; cancellation prevents an old animation from opening a stale section. There are no per-frame React renders. Repeated actions cannot start overlapping sequences. Reduced motion skips the flight, settling, visible-playback delay, spin, and animated exit.
+`RecordDisc` samples the transfer curve once and runs browser animations on separate travel, tilt, and spin layers. Finite animation completion promises advance the controller; cancellation prevents an old animation from opening a stale section. There are no per-frame React renders. Repeated actions cannot start overlapping sequences.
 
 Resize and scroll notifications only interrupt travel when its destination actually moves; redundant browser events and sleeve hover changes cannot skip the animation. A real layout change during outward flight aligns the record with the newly measured player and preserves the settling beat before opening. During return it finishes the sequence and restores focus. While the popup is open, layout changes keep the record aligned, and the return path is measured again before closing.
-
-The **Record animation: On/Off** button in the room controls motion for this site. It initially follows the device's reduced-motion setting, and explicit choices are saved in local storage when available. `/?motion=on` explicitly enables motion for a preview visit, including on a device that requests reduced motion; `/?motion=off` disables it. A control click supersedes and removes that URL override. Reduced motion skips travel, settling, and continuous rotation, including when the system preference changes mid-sequence while the site is following it. JavaScript and CSS use the same effective preference so enabling motion also restores the booklet's exit animation and record return.
 
 The dialog focuses Close when opened, contains Tab/Shift+Tab, supports Escape, and scrolls its `.portfolioContent` area while keeping Close in place. Add future content and controls inside that area. Focus returns to the originating album after playback ends. Positioning belongs to the outer wrapper; animation belongs to the inner panel so mobile centering remains stable.
 
@@ -78,24 +72,13 @@ All five records open the same warm-paper booklet shell, in both development and
 - Skills: grouped categories and supporting descriptions.
 - Top 100 Albums: sample cover grid.
 
-About, Projects, Experiences, and Skills render the full content from `src/data/portfolio.ts`, preserving the order of headings, metadata, paragraphs, and lists. The booklet framing text and sample album sleeves live in `src/data/booklet.ts`. The album grid reuses five existing sleeve images to demonstrate the layout; it is explicitly labeled as a sample sequence, not an actual ranking. Add real album metadata and ranks when the collection is ready. The previous booklet design experiment has been removed; the current development controls compare only the record motion.
-
-## Comparing motion in development
-
-Run `npm run dev`, then open **Motion lab** at the bottom left:
-
-- **Lift & place** and **Play at turntable** switch the interaction style.
-- **Normal / Half speed** scales the record sequence, arm movement, playback pause, and closing transition together.
-- **Replay last album** repeats your last selection. Choose an album first to enable it.
-
-Settings persist for that tab in session storage. Changing a setting resets any active sequence and clears the parked record. The panel is inert while the booklet is open, so dialog focus stays contained. The public **Record animation** switch still controls reduced motion independently. The panel and its styles are excluded from production builds; `npm run preview` uses Lift & place at normal speed.
+About, Projects, Experiences, and Skills render the full content from `src/data/portfolio.ts`, preserving the order of headings, metadata, paragraphs, and lists. The booklet framing text and sample album sleeves live in `src/data/booklet.ts`. The album grid reuses five existing sleeve images to demonstrate the layout; it is explicitly labeled as a sample sequence, not an actual ranking. Add real album metadata and ranks when the collection is ready.
 
 ## Browser checks after changes
 
 - Open and close each of the five albums. Try repeated clicks and repeated Escape presses.
 - Use Tab and Shift+Tab in the popup; confirm focus returns to the selected album.
-- Resize during flight, playback, and return. Change reduced-motion preferences with an animation active.
-- Compare both motion styles, half speed, replay, and a mode change during flight. Confirm the complete landing and one second of playback are visible before the booklet opens.
+- Resize during flight, playback, and return. Confirm the complete landing and one second of playback are visible before the booklet opens.
 - Check that the record remains stopped during transfer, begins spinning after landing, and stops before returning. Confirm platter and arm alignment after resizing.
 - Check each section's content layout, especially long headings, project lists, skill groups, and the album grid.
 - Check desktop (1440×900), tablet (768×1024), phone (390×844 and 320×568), and landscape (844×390).

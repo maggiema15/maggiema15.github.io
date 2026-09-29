@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { PortfolioSection } from '../data/portfolio'
-import type { MotionSettings } from '../data/recordPlayer'
 
 type RecordPosition = { x: number; y: number; size: number }
 export type RecordPath = {
@@ -8,13 +7,12 @@ export type RecordPath = {
   destination: RecordPosition & { tilt: number }
   deck: { x: number; y: number; width: number; height: number }
 }
-export type PlaybackPhase = 'flying' | 'settling' | 'playing' | 'spinning' | 'closing' | 'returning' | 'parked'
+export type PlaybackPhase = 'flying' | 'settling' | 'playing' | 'spinning' | 'closing' | 'returning'
 type PlaybackState =
   | { phase: 'idle' }
-  | { phase: PlaybackPhase; section: PortfolioSection; path: RecordPath; settings: MotionSettings; fromParked: boolean }
+  | { phase: PlaybackPhase; section: PortfolioSection; path: RecordPath }
 
 const idle: PlaybackState = { phase: 'idle' }
-const available = (state: PlaybackState) => state.phase === 'idle' || state.phase === 'parked'
 
 function samePosition(a: RecordPosition, b: RecordPosition) {
   return Math.abs(a.x - b.x) < 0.5 && Math.abs(a.y - b.y) < 0.5 && Math.abs(a.size - b.size) < 0.5
@@ -41,14 +39,12 @@ function measurePath(button: HTMLButtonElement, target: HTMLDivElement): RecordP
   }
 }
 
-export function useRecordPlayback(reducedMotion: boolean, settings: MotionSettings) {
+export function useRecordPlayback() {
   const [state, setState] = useState<PlaybackState>(idle)
-  const [canReplay, setCanReplay] = useState(false)
   // Synchronous guards also reject duplicate input before React commits a render.
   const stateRef = useRef<PlaybackState>(idle)
   const playerTargetRef = useRef<HTMLDivElement>(null)
   const activeButtonRef = useRef<HTMLButtonElement | null>(null)
-  const lastSectionRef = useRef<PortfolioSection | null>(null)
   const restoreFocusRef = useRef(false)
 
   const commit = useCallback((next: PlaybackState) => {
@@ -63,54 +59,33 @@ export function useRecordPlayback(reducedMotion: boolean, settings: MotionSettin
   }, [])
 
   const finish = useCallback(() => {
-    const current = stateRef.current
     restoreFocusRef.current = true
-    commit(current.phase !== 'idle' && current.settings.style === 'turntable'
-      ? { ...current, phase: 'parked', path: readPath() ?? current.path }
-      : idle)
-  }, [commit, readPath])
-
-  const reset = useCallback(() => {
-    // A dev control initiated this reset; keep keyboard focus on that control.
-    restoreFocusRef.current = false
     commit(idle)
   }, [commit])
 
   useLayoutEffect(() => {
-    if (available(state) && restoreFocusRef.current) {
+    if (state.phase === 'idle' && restoreFocusRef.current) {
       restoreFocusRef.current = false
       activeButtonRef.current?.focus({ preventScroll: true })
     }
   }, [state])
 
   const select = useCallback((section: PortfolioSection, button: HTMLButtonElement) => {
-    if (!available(stateRef.current) || !playerTargetRef.current) return
-    const fromParked = stateRef.current.phase === 'parked'
+    if (stateRef.current.phase !== 'idle' || !playerTargetRef.current) return
     restoreFocusRef.current = false
     activeButtonRef.current = button
-    lastSectionRef.current = section
-    setCanReplay(true)
     commit({
-      phase: reducedMotion ? 'spinning' : 'flying',
+      phase: 'flying',
       section,
       path: measurePath(button, playerTargetRef.current),
-      settings,
-      fromParked,
     })
-  }, [commit, reducedMotion, settings])
-
-  const replay = useCallback(() => {
-    const button = activeButtonRef.current
-    const section = lastSectionRef.current
-    if (button?.isConnected && section) select(section, button)
-  }, [select])
+  }, [commit])
 
   const close = useCallback(() => {
     const current = stateRef.current
     if (current.phase !== 'spinning') return
-    if (reducedMotion) finish()
-    else commit({ ...current, phase: 'closing' })
-  }, [commit, finish, reducedMotion])
+    commit({ ...current, phase: 'closing' })
+  }, [commit])
 
   const completeAnimation = useCallback((name: string) => {
     const current = stateRef.current
@@ -122,7 +97,7 @@ export function useRecordPlayback(reducedMotion: boolean, settings: MotionSettin
       commit({ ...current, phase: 'spinning' })
     } else if (current.phase === 'closing' && name === 'overlayExit') {
       const path = readPath()
-      if (path && current.settings.style === 'transfer') commit({ ...current, phase: 'returning', path })
+      if (path) commit({ ...current, phase: 'returning', path })
       else finish()
     } else if (current.phase === 'returning' && name === 'returnToSleeve') {
       finish()
@@ -133,16 +108,20 @@ export function useRecordPlayback(reducedMotion: boolean, settings: MotionSettin
     const current = stateRef.current
     if (current.phase === 'idle') return
     const path = readPath()
-    if (!path) { reset(); return }
+    if (!path) {
+      restoreFocusRef.current = false
+      commit(idle)
+      return
+    }
     const arriving = current.phase === 'flying' || current.phase === 'settling' || current.phase === 'playing'
     const targetUnchanged = current.phase === 'returning'
       ? samePosition(current.path.source, path.source)
       : samePosition(current.path.destination, path.destination)
         && Math.abs(current.path.destination.tilt - path.destination.tilt) < 0.001
-    if (targetUnchanged && !(arriving && reducedMotion)) return
+    if (targetUnchanged) return
     if (current.phase === 'returning') { finish(); return }
-    commit({ ...current, path, phase: arriving ? (reducedMotion ? 'spinning' : 'settling') : current.phase })
-  }, [commit, finish, reset, readPath, reducedMotion])
+    commit({ ...current, path, phase: arriving ? 'settling' : current.phase })
+  }, [commit, finish, readPath])
 
   const activeId = state.phase === 'idle' ? undefined : state.section.id
   useEffect(() => {
@@ -180,12 +159,5 @@ export function useRecordPlayback(reducedMotion: boolean, settings: MotionSettin
     }
   }, [activeId, settleLayoutChange])
 
-  useEffect(() => {
-    if (!reducedMotion) return
-    const phase = stateRef.current.phase
-    if (phase === 'closing' || phase === 'returning') finish()
-    else settleLayoutChange()
-  }, [reducedMotion, finish, settleLayoutChange])
-
-  return { state, playerTargetRef, select, close, completeAnimation, reset, replay, canReplay }
+  return { state, playerTargetRef, select, close, completeAnimation }
 }
